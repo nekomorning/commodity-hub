@@ -26,6 +26,12 @@
   .badge{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:5px 12px;
     border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18);}
   .badge b{font-weight:600;}
+  /* ===== Tab 导航 ===== */
+  .tabs{display:flex; gap:8px; margin-bottom:18px;}
+  .tab{display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-size:14px; font-weight:600;
+    padding:9px 22px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:#475569; transition:.15s;}
+  .tab:hover{border-color:#93c5fd; color:#1d4ed8;}
+  .tab.active{background:#1e2a3a; color:#fff; border-color:#1e2a3a;}
   /* ===== 横向对比表 ===== */
   .cmp-card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin-bottom:24px;}
   .sec-title{font-size:16px; font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:8px;}
@@ -100,6 +106,11 @@
       <span class="badge">合计 <b>25</b> 个看板页面</span>
     </div>
   </header>
+
+  <nav class="tabs">
+    <a class="tab active" href="https://nekomorning.github.io/commodity-hub/index.html">🏠 首页 · 汇总导航</a>
+    <a class="tab" href="https://nekomorning.github.io/commodity-hub/daily.html">📰 日报汇总</a>
+  </nav>
 
   <!-- 横向对比 -->
   <section class="cmp-card">
