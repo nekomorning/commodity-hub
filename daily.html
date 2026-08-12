@@ -81,8 +81,10 @@
   .quote .q-chg.down{color:var(--down);}
   .quote .q-chg.flat{color:var(--sub);}
   .panel-body{padding:14px 18px 18px;}
-  .sec-title{font-size:12px; font-weight:700; color:var(--sub); letter-spacing:1px; margin-bottom:10px;
-    padding-bottom:8px; border-bottom:1px dashed var(--line);}
+  .daily-title{font-size:19px; font-weight:700; color:var(--ink); padding:14px 20px; background:var(--card);
+    border:1px solid var(--line); border-radius:14px; margin-bottom:14px; display:flex; align-items:center; gap:10px;}
+  .daily-title .ico{font-size:18px;}
+  .daily-title .date{color:#1d4ed8;}
   ul.pts{list-style:none;}
   ul.pts li{position:relative; padding-left:16px; margin-bottom:11px; font-size:13.5px; color:#334155;}
   ul.pts li::before{content:""; position:absolute; left:0; top:8px; width:6px; height:6px; border-radius:50%; background:#cbd5e1;}
@@ -134,18 +136,20 @@
     <div class="cal-pop" id="calPop" hidden></div>
   </section>
 
+  <div class="daily-title" id="dailyTitle"><span class="ico">📰</span><span>日度汇总 ·</span><span class="date" id="dailyDate">—</span></div>
+
   <div class="grid" id="grid">
     <section class="panel">
       <div class="panel-head"><span class="pdot ru"></span><span class="pname">天然胶 RU</span><span class="quote" id="quote-ru">—</span></div>
-      <div class="panel-body"><div class="sec-title">日度总结</div><ul class="pts" id="list-ru"></ul></div>
+      <div class="panel-body"><ul class="pts" id="list-ru"></ul></div>
     </section>
     <section class="panel">
       <div class="panel-head"><span class="pdot br"></span><span class="pname">合成胶 BR</span><span class="quote" id="quote-br">—</span></div>
-      <div class="panel-body"><div class="sec-title">日度总结</div><ul class="pts" id="list-br"></ul></div>
+      <div class="panel-body"><ul class="pts" id="list-br"></ul></div>
     </section>
     <section class="panel">
       <div class="panel-head"><span class="pdot lc"></span><span class="pname">碳酸锂 LC</span><span class="quote" id="quote-lc">—</span></div>
-      <div class="panel-body"><div class="sec-title">日度总结</div><ul class="pts" id="list-lc"></ul></div>
+      <div class="panel-body"><ul class="pts" id="list-lc"></ul></div>
     </section>
   </div>
 
@@ -661,6 +665,7 @@ function syncFilterUI(){
 function render(dateKey){
   curDate = dateKey;
   const day = DAILY[dateKey] || {};
+  document.getElementById('dailyDate').textContent = fmtDate(dateKey);
   for (const k of ['ru','br','lc']){
     const items = day[k] || [];
     const ul = document.getElementById('list-' + k);
