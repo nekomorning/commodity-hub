@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RU/BR/LC 汇总看板 · 大宗商品数据看板导航中心</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --line:#e5e9f0; --ink:#1f2937; --sub:#6b7280;
+    --ru:#b45309; --ru-bg:#fdf4e3; --br:#2563eb; --br-bg:#eaf1fe; --lc:#7c3aed; --lc-bg:#f3eefe;
+    --up:#d92c2c; --down:#0f9d58;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.6; padding:28px 16px 60px;}
+  .wrap{max-width:1200px; margin:0 auto;}
+  /* ===== 页头 ===== */
+  header{background:linear-gradient(135deg,#1e2a3a 0%,#2d3f57 100%); color:#fff; border-radius:16px;
+    padding:28px 32px; margin-bottom:24px; position:relative; overflow:hidden;}
+  header::after{content:""; position:absolute; right:-60px; top:-60px; width:240px; height:240px;
+    border-radius:50%; background:rgba(255,255,255,.06);}
+  header .crumbs{font-size:13px; color:#9fb3c8; letter-spacing:1px; margin-bottom:8px;}
+  header h1{font-size:26px; font-weight:700; letter-spacing:1px;}
+  header .sub{margin-top:6px; color:#c8d6e5; font-size:14px;}
+  header .meta{margin-top:14px; display:flex; flex-wrap:wrap; gap:10px;}
+  .badge{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:5px 12px;
+    border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18);}
+  .badge b{font-weight:600;}
+  /* ===== 横向对比表 ===== */
+  .cmp-card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin-bottom:24px;}
+  .sec-title{font-size:16px; font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:8px;}
+  .sec-sub{font-size:12.5px; color:var(--sub); margin-bottom:14px;}
+  table.cmp{width:100%; border-collapse:collapse; font-size:14px;}
+  table.cmp th{background:#f8fafc; color:var(--sub); font-weight:600; text-align:left; padding:10px 12px;
+    border-bottom:2px solid var(--line); white-space:nowrap; font-size:12.5px;}
+  table.cmp td{padding:12px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  table.cmp tr:last-child td{border-bottom:none;}
+  .dot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:8px;}
+  .dot.ru{background:var(--ru);} .dot.br{background:var(--br);} .dot.lc{background:var(--lc);}
+  .up{color:var(--up); font-weight:600;}
+  .down{color:var(--down); font-weight:600;}
+  .flat{color:var(--sub);}
+  .big-num{font-size:16px; font-weight:700; font-variant-numeric:tabular-nums;}
+  .unit{font-size:11.5px; color:var(--sub); margin-left:4px; font-weight:400;}
+  .tag{display:inline-block; font-size:11px; padding:2px 8px; border-radius:6px; font-weight:600;}
+  .tag-ru{background:var(--ru-bg); color:var(--ru);} .tag-br{background:var(--br-bg); color:var(--br);}
+  .tag-lc{background:var(--lc-bg); color:var(--lc);}
+  a.cmp-go{display:inline-flex; align-items:center; gap:4px; font-size:12.5px; font-weight:600; color:#0f766e;
+    text-decoration:none; border:1px solid #99d5cf; padding:4px 12px; border-radius:8px; background:#f0fdfa;
+    transition:.15s;}
+  a.cmp-go:hover{background:#d9f5f0;}
+  /* ===== 品种卡片 ===== */
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  @media (max-width:960px){.grid{grid-template-columns:1fr;}}
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden;
+    display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(16,24,40,.05);}
+  .panel-head{padding:18px 20px 14px; border-bottom:1px solid var(--line);}
+  .panel-head .row1{display:flex; align-items:center; justify-content:space-between;}
+  .pname{font-size:19px; font-weight:700; display:flex; align-items:center; gap:8px;}
+  .pcode{font-size:12px; color:var(--sub); font-weight:600; letter-spacing:1px; margin-top:2px;}
+  a.enter{display:inline-flex; align-items:center; gap:5px; text-decoration:none; font-size:13px; font-weight:700;
+    color:#fff; padding:7px 16px; border-radius:9px; transition:.15s; box-shadow:0 1px 2px rgba(0,0,0,.15);}
+  a.enter:hover{filter:brightness(1.08); transform:translateY(-1px);}
+  a.enter.ru{background:var(--ru);} a.enter.br{background:var(--br);} a.enter.lc{background:var(--lc);}
+  .pdate{margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;}
+  .pdate .badge{color:var(--sub); background:#f4f6f9; border-color:var(--line); font-size:11.5px; padding:3px 10px;}
+  /* 核心指标 */
+  .kpi{padding:16px 20px 6px; font-size:12.5px; font-weight:700; color:var(--sub); letter-spacing:1px;}
+  .kpi-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 20px 16px;}
+  .kpi-cell{background:#fafbfd; border:1px solid var(--line); border-radius:10px; padding:10px 12px;}
+  .kpi-cell .lb{font-size:11.5px; color:var(--sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .kpi-cell .val{font-size:15px; font-weight:700; margin-top:2px; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .kpi-cell .chg{font-size:11.5px; font-weight:600; margin-left:6px;}
+  /* 页面导航 */
+  .nav{padding:0 20px 18px; border-top:1px dashed var(--line); margin:0 0 0 0;}
+  .nav .t{font-size:12.5px; font-weight:700; color:var(--sub); letter-spacing:1px; padding:14px 0 8px;}
+  .nav-grid{display:grid; grid-template-columns:1fr 1fr; gap:7px;}
+  .nav-grid a{display:flex; align-items:center; gap:7px; text-decoration:none; font-size:12.8px; color:#334155;
+    background:#fff; border:1px solid var(--line); border-radius:8px; padding:8px 10px; transition:.12s;}
+  .nav-grid a:hover{border-color:#93c5fd; background:#f0f7ff; color:#1d4ed8; transform:translateY(-1px);}
+  .nav-grid a .no{font-size:10.5px; font-weight:700; color:#fff; border-radius:5px; padding:1px 5px; flex:0 0 auto;}
+  .no-ru{background:var(--ru);} .no-br{background:var(--br);} .no-lc{background:var(--lc);}
+  .nav-grid a .nm{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  /* 页脚 */
+  footer{margin-top:28px; font-size:12px; color:var(--sub); text-align:center; line-height:1.9;}
+  footer .hl{color:#0f766e; font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="crumbs">大宗商品数据看板 · 导航中心</div>
+    <h1>RU / BR / LC 汇总看板</h1>
+    <div class="sub">天然胶（RU）· 合成胶（BR）· 碳酸锂（LC）三品种数据看板统一入口 —— 点击任意卡片跳转至对应看板页面</div>
+    <div class="meta">
+      <span class="badge">RU 天然胶 · 更新至 <b>2026-08-11</b></span>
+      <span class="badge">BR 合成胶 · 更新至 <b>2026-08-11</b></span>
+      <span class="badge">LC 碳酸锂 · 更新至 <b>2026-08-12</b></span>
+      <span class="badge">合计 <b>25</b> 个看板页面</span>
+    </div>
+  </header>
+
+  <!-- 横向对比 -->
+  <section class="cmp-card">
+    <div class="sec-title">📊 三品种主力合约横向对比</div>
+    <div class="sec-sub">价格单位：元/吨 · 环比 = 最新值相对上一交易日 · 涨跌按中国习惯（红涨绿跌）</div>
+    <table class="cmp">
+      <thead>
+        <tr>
+          <th>品种</th><th>代表合约</th><th>主力收盘价</th><th>日环比</th><th>周环比</th>
+          <th>最新数据日期</th><th>页面数</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="dot ru"></span><b>天然胶 RU</b></td>
+          <td>RU09</td>
+          <td><span class="big-num">16,960</span><span class="unit">元/吨</span></td>
+          <td class="up">+0.33%</td><td class="up">+1.65%</td>
+          <td>2026-08-11</td><td><span class="tag tag-ru">10 页</span></td>
+          <td><a class="cmp-go" href="https://nekomorning.github.io/n-rubber-dashboard/" target="_blank">进入看板 →</a></td>
+        </tr>
+        <tr>
+          <td><span class="dot br"></span><b>合成胶 BR</b></td>
+          <td>BR主力</td>
+          <td><span class="big-num">13,190</span><span class="unit">元/吨</span></td>
+          <td class="up">+1.23%</td><td class="up">+2.73%</td>
+          <td>2026-08-11</td><td><span class="tag tag-br">7 页</span></td>
+          <td><a class="cmp-go" href="https://nekomorning.github.io/s-rubber-dashboard/" target="_blank">进入看板 →</a></td>
+        </tr>
+        <tr>
+          <td><span class="dot lc"></span><b>碳酸锂 LC</b></td>
+          <td>LC主力</td>
+          <td><span class="big-num">149,700</span><span class="unit">元/吨</span></td>
+          <td class="up">+2.63%</td><td class="up">+4.52%</td>
+          <td>2026-08-12</td><td><span class="tag tag-lc">8 页</span></td>
+          <td><a class="cmp-go" href="https://nekomorning.github.io/lithium-dashboard/" target="_blank">进入看板 →</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 三个品种卡片 -->
+  <div class="grid">
+
+    <!-- ==================== RU 天然胶 ==================== -->
+    <section class="panel">
+      <div class="panel-head">
+        <div class="row1">
+          <div>
+            <div class="pname"><span class="dot ru"></span>天然胶</div>
+            <div class="pcode">RU · N-RUBBER · 上期所 / 能源中心</div>
+          </div>
+          <a class="enter ru" href="https://nekomorning.github.io/n-rubber-dashboard/" target="_blank">进入看板 ↗</a>
+        </div>
+        <div class="pdate">
+          <span class="badge">数据更新至 2026-08-11</span>
+          <span class="badge">10 个页面</span>
+        </div>
+      </div>
+      <div class="kpi">核心指标速览</div>
+      <div class="kpi-grid">
+        <div class="kpi-cell"><div class="lb">RU09 收盘价</div><div class="val">16,960<span class="chg up">+0.33%</span></div></div>
+        <div class="kpi-cell"><div class="lb">NR 主力收盘价</div><div class="val">14,835<span class="chg up">+0.24%</span></div></div>
+        <div class="kpi-cell"><div class="lb">泰国胶水（泰铢/公斤）</div><div class="val">74.0<span class="chg down">-0.67%</span></div></div>
+        <div class="kpi-cell"><div class="lb">泰国杯胶（泰铢/公斤）</div><div class="val">67.0<span class="chg up">+0.75%</span></div></div>
+        <div class="kpi-cell"><div class="lb">全乳胶现货</div><div class="val">17,250<span class="chg up">+0.58%</span></div></div>
+        <div class="kpi-cell"><div class="lb">泰混现货</div><div class="val">16,860<span class="chg up">+0.36%</span></div></div>
+        <div class="kpi-cell"><div class="lb">RU+NR 总持仓</div><div class="val">284,259</div></div>
+        <div class="kpi-cell"><div class="lb">烟片胶现货</div><div class="val">23,200<span class="chg flat">±0.00%</span></div></div>
+      </div>
+      <div class="nav">
+        <div class="t">📁 页面导航</div>
+        <div class="nav-grid">
+          <a href="https://nekomorning.github.io/n-rubber-dashboard/index.html" target="_blank"><span class="no no-ru">P1</span><span class="nm">日度价格</span></a>
+          <a href="https://nekomorning.github.io/n-rubber-dashboard/天然胶数据看板_页面二_库存.html" target="_blank"><span class="no no-ru">P2</span><span class="nm">库存</span></a>
+          <a href="https://nekomorning.github.io/n-rubber-dashboard/天然胶数据看板_页面三_轮胎.html" target="_blank"><span class="no no-ru">P3</span><span class="nm">下游轮胎</span></a>
+          <a href="https://nekomorning.github.io/n-rubber-dashboard/天然胶数据看板_页面四_天气数据.html" target="_blank"><span class="no no-ru">P4</span><span class="nm">天气数据</span></a>
+          <a href="https://nekomorning.github.io/n-rubber-dashboard/天然胶数据看板_页面五_天然橡胶进口.html" target="_blank"><span class="no no-ru">P5</span><span class="nm">天然橡胶进口</span></a>
+          <a href="https://nekomorning.github.io/n-rubber-dashboard/天然胶数据看板_页面六_轮胎进出口.html" target="_blank"><span class="no no-ru">P6</span><span class="nm">轮胎进出口</span></a>
+          <a href="https://nekomorning.github.io/n-rubber-dashboard/天然胶数据看板_页面七_重卡.html" target="_blank"><span class="no no-ru">P7</span><span class="nm">重卡</span></a>
+          <a href="https://nekomorning.github.io/n-rubber-dashboard/天然胶数据看板_页面八_ANRPC产消.html" target="_blank"><span class="no no-ru">P8</span><span class="nm">ANRPC 产消</span></a>
+          <a href="https://nekomorning.github.io/n-rubber-dashboard/天然胶数据看板_全球年度平衡.html" target="_blank"><span class="no no-ru">⚖</span><span class="nm">全球年度平衡</span></a>
+          <a href="https://nekomorning.github.io/n-rubber-dashboard/天然胶数据看板_一页通.html" target="_blank"><span class="no no-ru">◈</span><span class="nm">一页通（总览）</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== BR 合成胶 ==================== -->
+    <section class="panel">
+      <div class="panel-head">
+        <div class="row1">
+          <div>
+            <div class="pname"><span class="dot br"></span>合成胶</div>
+            <div class="pcode">BR · S-RUBBER · 丁二烯系顺丁橡胶</div>
+          </div>
+          <a class="enter br" href="https://nekomorning.github.io/s-rubber-dashboard/" target="_blank">进入看板 ↗</a>
+        </div>
+        <div class="pdate">
+          <span class="badge">数据更新至 2026-08-11</span>
+          <span class="badge">7 个页面</span>
+        </div>
+      </div>
+      <div class="kpi">核心指标速览</div>
+      <div class="kpi-grid">
+        <div class="kpi-cell"><div class="lb">BR 主力收盘价</div><div class="val">13,190<span class="chg up">+1.23%</span></div></div>
+        <div class="kpi-cell"><div class="lb">丁二烯价格</div><div class="val">10,675<span class="chg up">+1.18%</span></div></div>
+        <div class="kpi-cell"><div class="lb">顺丁橡胶（中国）</div><div class="val">13,200<span class="chg up">+0.38%</span></div></div>
+        <div class="kpi-cell"><div class="lb">丁苯橡胶</div><div class="val">13,800<span class="chg up">+0.73%</span></div></div>
+        <div class="kpi-cell"><div class="lb">原油（元/桶）</div><div class="val">622.4<span class="chg up">+2.82%</span></div></div>
+        <div class="kpi-cell"><div class="lb">石脑油</div><div class="val">5,139<span class="chg flat">±0.00%</span></div></div>
+        <div class="kpi-cell"><div class="lb">丁二烯 CIF 中国（美元/吨）</div><div class="val">1,300<span class="chg flat">±0.00%</span></div></div>
+        <div class="kpi-cell"><div class="lb">总仓单</div><div class="val">21,510<span class="chg down">-1.56%</span></div></div>
+      </div>
+      <div class="nav">
+        <div class="t">📁 页面导航</div>
+        <div class="nav-grid">
+          <a href="https://nekomorning.github.io/s-rubber-dashboard/index.html" target="_blank"><span class="no no-br">P1</span><span class="nm">日度价格</span></a>
+          <a href="https://nekomorning.github.io/s-rubber-dashboard/p2.html" target="_blank"><span class="no no-br">P2</span><span class="nm">开工 · 库存 · 表需</span></a>
+          <a href="https://nekomorning.github.io/s-rubber-dashboard/p3.html" target="_blank"><span class="no no-br">P3</span><span class="nm">丁二烯物流</span></a>
+          <a href="https://nekomorning.github.io/s-rubber-dashboard/ypt.html" target="_blank"><span class="no no-br">◈</span><span class="nm">一页通（总览）</span></a>
+          <a href="https://nekomorning.github.io/s-rubber-dashboard/balance.html" target="_blank"><span class="no no-br">⚖</span><span class="nm">丁二烯平衡表</span></a>
+          <a href="https://nekomorning.github.io/s-rubber-dashboard/capacity.html" target="_blank"><span class="no no-br">🏗</span><span class="nm">产能投放</span></a>
+          <a href="https://nekomorning.github.io/s-rubber-dashboard/naphtha.html" target="_blank"><span class="no no-br">⛽</span><span class="nm">石脑油周报</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== LC 碳酸锂 ==================== -->
+    <section class="panel">
+      <div class="panel-head">
+        <div class="row1">
+          <div>
+            <div class="pname"><span class="dot lc"></span>碳酸锂</div>
+            <div class="pcode">LC · LITHIUM · 广期所 / 锂电产业链</div>
+          </div>
+          <a class="enter lc" href="https://nekomorning.github.io/lithium-dashboard/" target="_blank">进入看板 ↗</a>
+        </div>
+        <div class="pdate">
+          <span class="badge">数据更新至 2026-08-12</span>
+          <span class="badge">8 个页面</span>
+        </div>
+      </div>
+      <div class="kpi">核心指标速览</div>
+      <div class="kpi-grid">
+        <div class="kpi-cell"><div class="lb">LC 主力收盘价</div><div class="val">149,700<span class="chg up">+2.63%</span></div></div>
+        <div class="kpi-cell"><div class="lb">电碳价格</div><div class="val">148,000<span class="chg up">+2.25%</span></div></div>
+        <div class="kpi-cell"><div class="lb">锂矿：辉石（美元/吨）</div><div class="val">2,075<span class="chg up">+0.48%</span></div></div>
+        <div class="kpi-cell"><div class="lb">锂矿：云母</div><div class="val">4,435<span class="chg up">+4.60%</span></div></div>
+        <div class="kpi-cell"><div class="lb">磷酸铁锂价格</div><div class="val">55,400<span class="chg up">+1.12%</span></div></div>
+        <div class="kpi-cell"><div class="lb">三元材料价格</div><div class="val">178,850<span class="chg up">+0.51%</span></div></div>
+        <div class="kpi-cell"><div class="lb">总持仓量</div><div class="val">687,276</div></div>
+        <div class="kpi-cell"><div class="lb">仓单</div><div class="val">35,101<span class="chg up">+7.83%</span></div></div>
+      </div>
+      <div class="nav">
+        <div class="t">📁 页面导航</div>
+        <div class="nav-grid">
+          <a href="https://nekomorning.github.io/lithium-dashboard/p1.html" target="_blank"><span class="no no-lc">P1</span><span class="nm">日度价格</span></a>
+          <a href="https://nekomorning.github.io/lithium-dashboard/p2.html" target="_blank"><span class="no no-lc">P2</span><span class="nm">产量 · 开工 · 利润</span></a>
+          <a href="https://nekomorning.github.io/lithium-dashboard/p3.html" target="_blank"><span class="no no-lc">P3</span><span class="nm">产业链库存</span></a>
+          <a href="https://nekomorning.github.io/lithium-dashboard/p4.html" target="_blank"><span class="no no-lc">P4</span><span class="nm">数据对比</span></a>
+          <a href="https://nekomorning.github.io/lithium-dashboard/p5.html" target="_blank"><span class="no no-lc">P5</span><span class="nm">全球汽车</span></a>
+          <a href="https://nekomorning.github.io/lithium-dashboard/p6.html" target="_blank"><span class="no no-lc">P6</span><span class="nm">全球锂资源</span></a>
+          <a href="https://nekomorning.github.io/lithium-dashboard/p7.html" target="_blank"><span class="no no-lc">P7</span><span class="nm">中国锂产业链平衡</span></a>
+          <a href="https://nekomorning.github.io/lithium-dashboard/ypt.html" target="_blank"><span class="no no-lc">◈</span><span class="nm">一页通（总览）</span></a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <div>本页为 <span class="hl">RU / BR / LC 三品种数据看板导航中心</span>，汇总数据均来自各看板最新构建产物（更新日期见各卡片徽章）。</div>
+    <div>天然胶看板 <span class="hl">nekomorning.github.io/n-rubber-dashboard</span> · 合成胶看板 <span class="hl">nekomorning.github.io/s-rubber-dashboard</span> · 碳酸锂看板 <span class="hl">nekomorning.github.io/lithium-dashboard</span></div>
+  </footer>
+
+</div>
+</body>
+</html>
