@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RU/BR/LC 日报汇总 · 大宗商品数据看板</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --line:#e5e9f0; --ink:#1f2937; --sub:#6b7280;
+    --ru:#b45309; --br:#2563eb; --lc:#7c3aed;
+    --up:#d92c2c; --down:#0f9d58; --flat:#9ca3af; --key:#b45309;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.65; padding:28px 16px 60px;}
+  .wrap{max-width:1240px; margin:0 auto;}
+  header{background:linear-gradient(135deg,#1e2a3a 0%,#2d3f57 100%); color:#fff; border-radius:16px;
+    padding:26px 32px 20px; margin-bottom:20px; position:relative; overflow:hidden;}
+  header::after{content:""; position:absolute; right:-60px; top:-60px; width:240px; height:240px;
+    border-radius:50%; background:rgba(255,255,255,.06);}
+  .crumbs{font-size:13px; color:#9fb3c8; letter-spacing:1px; margin-bottom:8px;}
+  header h1{font-size:24px; font-weight:700; letter-spacing:1px;}
+  header .sub{margin-top:6px; color:#c8d6e5; font-size:13.5px;}
+  header .meta{margin-top:12px; display:flex; flex-wrap:wrap; gap:10px;}
+  .badge{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:4px 12px;
+    border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); color:#e8eef5;}
+  .badge b{font-weight:700;}
+  .tabs{display:flex; gap:8px; margin-bottom:18px;}
+  .tab{display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-size:14px; font-weight:600;
+    padding:9px 22px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:#475569; transition:.15s;}
+  .tab:hover{border-color:#93c5fd; color:#1d4ed8;}
+  .tab.active{background:#1e2a3a; color:#fff; border-color:#1e2a3a;}
+  .filter{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 20px; margin-bottom:20px;}
+  .filter .flabel{font-size:12.5px; font-weight:700; color:var(--sub); letter-spacing:1px; margin-bottom:10px;}
+  .filter .btns{display:flex; flex-wrap:wrap; gap:8px;}
+  .fbtn{font-size:13.5px; font-weight:600; padding:7px 16px; border-radius:9px; cursor:pointer; user-select:none;
+    border:1px solid var(--line); background:#fff; color:#475569; transition:.12s;}
+  .fbtn:hover{border-color:#93c5fd; color:#1d4ed8;}
+  .fbtn.active{background:#1e2a3a; color:#fff; border-color:#1e2a3a;}
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  @media (max-width:1000px){.grid{grid-template-columns:1fr;}}
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden;
+    display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(16,24,40,.05);}
+  .panel-head{padding:16px 18px 12px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px;}
+  .pdot{width:11px; height:11px; border-radius:50%; flex:0 0 auto;}
+  .pdot.ru{background:var(--ru);} .pdot.br{background:var(--br);} .pdot.lc{background:var(--lc);}
+  .pname{font-size:17px; font-weight:700;}
+  .pcode{font-size:11.5px; color:var(--sub); font-weight:600; letter-spacing:.5px; margin-left:auto;}
+  .panel-body{padding:14px 18px 18px;}
+  .sec-title{font-size:12px; font-weight:700; color:var(--sub); letter-spacing:1px; margin-bottom:10px;
+    padding-bottom:8px; border-bottom:1px dashed var(--line);}
+  ul.pts{list-style:none;}
+  ul.pts li{position:relative; padding-left:16px; margin-bottom:11px; font-size:13.5px; color:#334155;}
+  ul.pts li::before{content:""; position:absolute; left:0; top:8px; width:6px; height:6px; border-radius:50%; background:#cbd5e1;}
+  ul.pts li.lead{font-weight:700; color:#111827;}
+  ul.pts li.lead::before{background:#1e2a3a;}
+  ul.pts li.empty{color:var(--flat); font-style:italic; padding-left:0;}
+  ul.pts li.empty::before{display:none;}
+  .subhead{font-size:12.5px; font-weight:700; color:#0f766e; margin:0 0 6px; padding:2px 8px; background:#f0fdfa;
+    border-radius:6px; display:inline-block;}
+  .up{color:var(--up); font-weight:700;}
+  .down{color:var(--down); font-weight:700;}
+  .flat{color:var(--flat); font-weight:600;}
+  .key{font-weight:700; color:var(--key); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:2px;}
+  footer{margin-top:26px; font-size:12px; color:var(--sub); text-align:center; line-height:1.9;}
+  footer .hl{color:#0f766e; font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+
+<header>
+  <div class="crumbs">大宗商品数据看板 · 导航中心</div>
+  <h1>RU / BR / LC 日报汇总</h1>
+  <div class="sub">同步自钉钉知识库《学习笔记 · 一页通》——按日度总结文字结构化呈现，红涨绿跌 · 重点加粗下划线</div>
+  <div class="meta">
+    <span class="badge">数据源：钉钉 · 赵芸曦学习笔记 · 一页通</span>
+    <span class="badge">覆盖区间 <b>2026.8.3 – 2026.8.12</b></span>
+    <span class="badge">共 <b>8</b> 个交易日</span>
+  </div>
+</header>
+
+
+  <nav class="tabs">
+    <a class="tab" href="https://nekomorning.github.io/commodity-hub/index.html">🏠 首页 · 汇总导航</a>
+    <a class="tab active" href="https://nekomorning.github.io/commodity-hub/daily.html">📰 日报汇总</a>
+  </nav>
+
+  <section class="filter">
+    <div class="flabel">📅 选择日期（默认最新）</div>
+    <div class="btns" id="dateBtns"></div>
+  </section>
+
+  <div class="grid" id="grid">
+    <section class="panel">
+      <div class="panel-head"><span class="pdot ru"></span><span class="pname">天然胶 RU</span><span class="pcode">上期所 / 能源中心</span></div>
+      <div class="panel-body"><div class="sec-title">日度总结</div><ul class="pts" id="list-ru"></ul></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><span class="pdot br"></span><span class="pname">合成胶 BR</span><span class="pcode">丁二烯系顺丁橡胶</span></div>
+      <div class="panel-body"><div class="sec-title">日度总结</div><ul class="pts" id="list-br"></ul></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><span class="pdot lc"></span><span class="pname">碳酸锂 LC</span><span class="pcode">广期所 / 锂电产业链</span></div>
+      <div class="panel-body"><div class="sec-title">日度总结</div><ul class="pts" id="list-lc"></ul></div>
+    </section>
+  </div>
+
+  <footer>
+    <div>日报内容同步自钉钉知识库《学习笔记 · 一页通》（<span class="hl">赵芸曦</span>），展示顺序为原始存档倒序；数值变化按中国习惯红涨绿跌。</div>
+    <div>聚合导航首页 <span class="hl">nekomorning.github.io/commodity-hub</span> · 日报汇总 <span class="hl">nekomorning.github.io/commodity-hub/daily.html</span></div>
+  </footer>
+
+</div>
+<script>
+
+const DAILY = {
+ "2026-08-12": {
+  "ru": [],
+  "br": [],
+  "lc": [
+   {
+    "t": "§key§枧下窝再度停产 + 旺季去库，市场转向交易强现实逻辑§/§，但 §key§27 年相比 26 年转向过剩的偏弱预期未改§/§。"
+   },
+   {
+    "t": "盘面放量增仓大幅上涨（09 持续减仓，但仍有 §red§23w 手仓单§/§，存在挤仓可能），主力收于 §red§149700，+3840§/§；月差走弱，9-1 月差 §green§140，-500§/§；1-5 月差 §green§3040，-380§/§。基差 -450 §flat§持平§/§，头部天齐等货仍升水 300。"
+   },
+   {
+    "t": "SMM 现货电碳 §red§148000，+3250§/§；辉石 §red§2075 美金，+10§/§；云母 §red§4435，+195§/§；铁锂正极 §red§55400，+615§/§。"
+   },
+   {
+    "t": "仓单 §red§35101，+2550§/§。"
+   },
+   {
+    "t": "钢联周三库存更新，207 家样本碳酸锂库存 §green§149020t，环比 -6150t§/§，去库略有放缓（上周 -7280），表需走弱。"
+   },
+   {
+    "t": "中矿津巴布韦 §key§10wt 硫酸锂项目开工§/§（折 LCE 5.5wt，应对津巴 27.1.1 起禁止锂精矿出口），预计 27 年年中投产；津巴发运恢复后 §key§26Q4 预计大量到港§/§，抢在 27.1.1 前多发。"
+   },
+   {
+    "t": "7 月中汽协数据：新能源车销量 §green§环比 -5%§/§、§red§同比 +24%§/§、累计同比 +10%，其中内销 -12%、出口 §red§+127%§/§。"
+   }
+  ]
+ },
+ "2026-08-11": {
+  "lc": [
+   {
+    "t": "现货成交基差持续走强，今日 §red§-450，+250§/§；天齐赣锋等头部好货已出现升水 09 §red§+200§/§ 左右报价。"
+   },
+   {
+    "t": "9-1 月差 §red§640，+80§/§；1-5 月差 §green§3420，-380§/§。"
+   },
+   {
+    "t": "现货：电碳 §red§144750，+250§/§；云母矿 §red§4240，+30§/§；磷酸铁锂正极 §red§54785，+60§/§。"
+   },
+   {
+    "t": "仓单 §red§32551，+930§/§。"
+   },
+   {
+    "t": "§key§枧下窝在合规压力下确认再次停产§/§（此前复产手续不规范遭举报）。"
+   },
+   {
+    "t": "智利 7 月出口：碳酸锂+硫酸锂折 LCE 总出口 §green§2.76wt，环比 -2k§/§，今年累计 23wt，§red§+42%§/§；其中出口至中国 1.93wt，环比 -4k，累计 18wt，+44%。"
+   }
+  ],
+  "br": [
+   {
+    "t": "§key§丁二烯走强§/§：山东送到价 §red§10675，+125§/§，江阴自提 §red§10275，+25§/§，民营竞拍小幅溢价成交约 10400；国际价格持稳，中国 CIF 1300，韩国 1270，中韩价差 30。"
+   },
+   {
+    "t": "顺丁两油市场价 §red§13200，+50§/§，民营市场价 §red§12800，+150§/§；东南亚价格 17114 §flat§持稳§/§，出口利润 §green§3554，-50§/§；BR-丁二烯价差 §red§2515，+35§/§。"
+   }
+  ],
+  "ru": [
+   {
+    "t": "RU 1-5 月差 §red§20，+10§/§，9-1 月差 §red§-915，+15§/§；RU-NR 价差 §red§2125，+20§/§。"
+   },
+   {
+    "t": "泰国东北部及海南未来降雨仍偏多，§key§影响割胶工作开展§/§。今日杯胶 §red§67，+0.5§/§，加工利润 -644，+28。"
+   },
+   {
+    "t": "周度库存：总库存 §green§108.68wt，-1.92§/§，其中深色胶 -1.7、浅色胶 -0.22；区外混合胶 §green§47.66wt，-1.28§/§。§key§不考虑 7.31 火灾影响，去库也有加速§/§。"
+   },
+   {
+    "t": "§key§科特迪瓦 7 月出口不及预期§/§（港口拥堵影响发运，产量没问题）：7 月出口 §green§15.75wt，环比 +1.55%、同比 -15.6%、累计同比 -2%§/§；原预期累计同比 +6~8%，§key§存在约 5wt 预期差§/§。出口中国 3.58wt，环比 -1.56%、同比 -12%、累计 +20%。"
+   }
+  ]
+ },
+ "2026-08-10": {
+  "lc": [
+   {
+    "t": "今日 LC 开盘大幅上行，收于 §red§146360，+6360（+4.5%）§/§，放量减仓上涨。9-1 月差 §green§560，-780§/§；1-5 月差 §red§3800，+1240§/§。"
+   },
+   {
+    "t": "SMM：电碳现货 §red§144500，+1750§/§；锂辉石 §red§2065 美金，+10§/§；磷酸铁锂正极 §red§54725，+530§/§。仓单 §red§31621，+1748§/§。"
+   },
+   {
+    "t": "现货端报盘约 5356 吨，09 合约现货报盘 4878 吨，平均升贴水 09-851，环比上调 35 元，报价区间 09-2500 ~ 09+500。§key§14 万以下采买活跃，下游刚需为主、追高意愿不足，成交清淡§/§；上游挺价松动，部分贸易商以无风险价格（09-1000 以下）收货交仓。"
+   },
+   {
+    "t": "枧下窝：近期二三十个举报，市里压力大；专家评审后整改需时间，§key§预计 8 月内复产§/§——复产流程合规问题涉及举报+环保督察。"
+   },
+   {
+    "t": "中矿 6.5wt 锂盐产能 6.30 起检修（津巴矿到港慢、缺矿），其中 §key§3wt 于 8.10 复产§/§，3.5wt 8 月中旬复产。"
+   }
+  ],
+  "br": [
+   {
+    "t": "丁二烯小幅走弱：山东送到价 §green§10550，-80§/§，民营竞拍底价附近成交约 10300，§key§下游观望情绪较浓§/§。国际价格亚洲涨欧洲跌：中国 CIF §red§1300，+20§/§，韩国 §red§1270，+30§/§，欧洲 §green§945，-25§/§。"
+   },
+   {
+    "t": "顺丁两油出厂价上调 §red§200 至 13200§/§，市场价 13150 §flat§持平§/§，基差 §red§120，+155§/§，BR 连一-连二月差 §red§45，+35§/§；出口利润 3604 §flat§持平§/§，BR-丁二烯价差 §green§2480，-75§/§。"
+   },
+   {
+    "t": "§key§海外乙烯检修：新加坡 Aster 工厂启动裂解装置检修§/§，115 万吨乙烯，检修 4 周。"
+   }
+  ],
+  "ru": [
+   {
+    "t": "盘面震荡为主：RU 1-5 月差 §red§10，+20§/§；非标基差泰混-RU01 §green§-1035，+25§/§；NR 连一-连二 §green§-70，-25§/§。"
+   },
+   {
+    "t": "原料：胶水 §green§74.5，-0.5§/§，杯胶 66.5 §flat§持平§/§，加工利润 -672，-16；云南胶水 §red§15700，+100§/§，海南胶水 §red§17400，+300§/§。"
+   },
+   {
+    "t": "§key§进入雨季，泰国和海南受暴雨及台风影响，短期影响割胶§/§；厄尔尼诺 ONI 指数 7 月最新值 1.4，主要体现为印尼偏干旱，其他地区影响有限。"
+   },
+   {
+    "t": "隆众：截至 8.9 青岛天胶保税+一般贸易合计库存 §green§64.5wt，环比 -0.9wt（-1.38%）§/§；保税区 7.01wt（-0.24%），一般贸易 57.49wt（-1.51%）。"
+   }
+  ]
+ },
+ "2026-08-07": {
+  "lc": [
+   {
+    "t": "市场流传宜丰生态环境局答复「枧下窝处于停产检修状态」——§key§经确认是应付环保临停 2-3 天，已恢复生产§/§，但爬坡速度和产量贡献不及预期。"
+   },
+   {
+    "t": "本周 5 日碳酸锂报盘约 2.5wt，周度加权升贴水 -1018 元（集中在 09-500~-2000），较上周 +492 元。§key§「强现实、弱预期」博弈持续§/§；回落至 14 万以下时成交活跃度显著提升，基差贴水收窄，月初下游以长协客供为主、逢低按需采购。"
+   },
+   {
+    "t": "今日放量增仓下跌：主力 09 收于 §green§14w，-1460§/§；9-1 月差 §green§1340，-200§/§；基差 §red§-700，+150§/§；SMM 电碳 §red§142750，+1250§/§；铁锂正极 §red§54195，+550§/§；仓单 §red§29873，+1420§/§。"
+   }
+  ],
+  "br": [
+   {
+    "t": "原油大涨、化工整体走强，BR 涨幅领先，放量增仓上涨。供应侧海外乙烯减产：镇海炼化 12wt 降负、茂名石化 10wt 临停，丁二烯开工 §green§63.31%，-1.76pp§/§；需求侧下游开工整体回升，折丁二烯需求周环比 §red§+3%§/§，顺丁表需高位（内需疲弱但出口高增）。"
+   },
+   {
+    "t": "§key§展望：8-9 月丁二烯供应侧检修装置重启提负+古雷石化 21wt 新投产放量§/§；需求侧国内半钢仍处淡季，观察顺丁出口能否持续高增支撑需求。"
+   },
+   {
+    "t": "今日丁二烯山东送到价 §red§10630，+280§/§，民营竞拍溢价成交 10350 附近，国际价格持平；BR-丁二烯 §green§2555，-50§/§；顺丁市场价 §red§13200，+250§/§，出口利润 §green§3554，-250§/§；连二-连三月差 §red§80，+30§/§。"
+   }
+  ],
+  "ru": [
+   {
+    "t": "变化不大：泰国杯胶 66.5 泰铢 §flat§持平§/§，加工利润 -656，+41。"
+   },
+   {
+    "t": "月差小幅走强：1-5 月差 §red§-10，+5§/§；NR 连一-连二月差 §red§-45，+25§/§；BR-NR 价差 §red§-1610，+125§/§；NR-SICOM 走强回正至 §red§53，+74§/§。"
+   }
+  ]
+ },
+ "2026-08-06": {
+  "lc": [
+   {
+    "t": "SMM 周度：LC 产量 §red§+130§/§（主要是盐湖 +260）；库存 §green§-6773§/§（锂盐厂累库 +1298、正极厂去库 -4054、贸易商去库 -4017）；表需 §red§+454§/§。上周去库 6449，§key§本周去库加速§/§。"
+   },
+   {
+    "t": "平均基差 -850 §flat§持平§/§，9-1 月差 §red§1540，+100§/§；仓单 §red§28453，+330§/§；SMM 电碳现货 §red§141500，+1250§/§；主力收盘价 §green§141460，-1760§/§；总持仓 67.5w，+3k。"
+   },
+   {
+    "t": "百川盈孚：今日贸易市场成交 1016 吨，点价区间 13.95-14.3 万元；电碳 09 合约贴水多在 300-1300 元，一线品牌升水 500 元，部分卤水料贴水 2000 元。"
+   },
+   {
+    "t": "§key§刚果（金）禁止铜精矿、钴精矿出口§/§；锂精矿未被禁，当前仅有紫金 Manono 锂矿（爬产中），预计 26 年产量 1wt LCE、27 年 4wt。"
+   }
+  ],
+  "br": [
+   {
+    "t": "丁二烯山东送到价 §red§10350，+125§/§，民营竞拍小幅溢价成交 10000 附近；国际价格中韩持平，欧洲 §green§跌 30 美金至 970§/§。"
+   },
+   {
+    "t": "顺丁市场价 §red§12950，+50§/§，出口利润 §green§3804，-50§/§，BR-丁二烯价差 §red§2605，+90§/§；盘面上涨后基差走弱至 §green§-5，-165§/§，连二-连三月差 §red§50，+40§/§；BR-NR §red§-1735，+110§/§。"
+   },
+   {
+    "t": "开工：本周丁二烯 §green§63.31%，-1.76pp§/§，周产量 10.2wt（-2.71%）；四大下游整体提开工，产量折丁二烯需求 8.5wt（§red§+3.02%§/§）。"
+   },
+   {
+    "t": "库存：丁二烯港口库存 §red§39450，+4350§/§；顺丁去库 -590、丁苯累库 +700、ABS +4000、SBS -1200。"
+   }
+  ],
+  "ru": [
+   {
+    "t": "§key§泰国气象厅发布暴雨预警（8.6-9 全国大范围暴雨），海南暴雨四级预警（8.6 夜-8.8 局地暴雨）§/§——8-10 月雨季季节性多雨，短期扰动割胶，中期缓解前期干旱、有利原料放量；§key§历史上厄尔尼诺当年天胶多为增产，次年易减产§/§。"
+   },
+   {
+    "t": "原料持平：杯胶 66.5，加工利润 -698，+36。"
+   },
+   {
+    "t": "9-1 月差 §green§-920，-5§/§，1-5 月差 §green§-15，-10§/§；非标基差泰混-09 §green§-145，-60§/§；RU-NR §red§2205，+45§/§。"
+   },
+   {
+    "t": "轮胎周度：全钢开工 §green§63.64%，-0.16pp§/§，半钢开工 §red§64.57%，+0.59pp§/§；库存天数小幅上升。"
+   }
+  ]
+ },
+ "2026-08-05": {
+  "lc": [
+   {
+    "t": "钢联样本周度库存第二期：总库存 §green§155170t§/§，去库加速（上周 -6950、本周 -7280），盘面走强。"
+   },
+   {
+    "t": "基差 -850 §flat§持平§/§；9-1 月差 §red§1440，+500§/§；仓单 §red§28123，+470§/§。"
+   },
+   {
+    "t": "SMM 电碳现货 §red§140250，+250§/§；锂云母矿 §red§4075，+60§/§；锂辉石 §green§2045 美元/吨，-5§/§；磷酸铁锂正极 §red§53340，+60§/§。"
+   },
+   {
+    "t": "7 月新能源乘用车批发销量预估 147 万辆：同比 §red§+24%§/§、环比 -1%、累计 +8%。"
+   }
+  ],
+  "br": [
+   {
+    "t": "丁二烯山东送到价 §green§10225，-50§/§，民营小幅溢价成交 9980 左右；国际价格中国 CIF §red§1280，+10 美金§/§，其他地区持平。"
+   },
+   {
+    "t": "顺丁两油市场价 §green§12900，-50§/§，出口利润 §red§3854，+50§/§，BR-丁二烯价差 §green§2515，-50§/§。"
+   },
+   {
+    "t": "§key§福建中沙古雷 150 万吨/年乙烯 7.29 投产§/§，丁二烯产能 21wt，占比总产能 2.5%。"
+   }
+  ],
+  "ru": [
+   {
+    "t": "泰国杯胶 §red§66.5，+1§/§；加工利润 -733，-259。"
+   },
+   {
+    "t": "月差走强：9-1 月差 §red§920，+25§/§，1-5 月差 §red§-5，+5§/§；NR 连一-连二月差 §red§-50，+10§/§。"
+   },
+   {
+    "t": "非标基差走弱：泰混-RU09 §green§-115，-40§/§。"
+   },
+   {
+    "t": "RU-NR §green§2160，-30§/§；BR-NR §green§-1845，-190§/§。"
+   },
+   {
+    "t": "§key§本周火灾影响混合胶去库超预期（48.94wt，-3.61wt）§/§，其他基本面变化不大。"
+   }
+  ]
+ },
+ "2026-08-04": {
+  "lc": [
+   {
+    "t": "基差 §red§-850，走强 300§/§；9-1 月差 §green§940，-220§/§。"
+   },
+   {
+    "t": "现货整体持稳：电解液 §red§+800§/§，三元正极 §green§-100§/§。"
+   },
+   {
+    "t": "仓单 §red§27653，+1101§/§。"
+   },
+   {
+    "t": "消息面：①§key§澳洲 Global Lithium Manna 锂矿获采矿审批§/§，2026Q4 最终投资决定、2027 年中投产首批精矿；②§key§美国国防部 3 亿美元采购 1.6wt 碳酸锂的收储招标取消§/§，官方未说明原因。"
+   }
+  ],
+  "br": [
+   {
+    "t": "丁二烯山东送到价 §red§10275，+75§/§，民营小幅溢价成交 9960 左右。"
+   },
+   {
+    "t": "顺丁两油市场价 §red§12950，+100§/§，出口利润 §green§3804，-100§/§；BR-丁二烯价差 §red§2565，+195§/§。"
+   },
+   {
+    "t": "福建中沙古雷 150 万吨/年乙烯 7.29 投产，丁二烯产能 21wt。"
+   }
+  ],
+  "ru": [
+   {
+    "t": "库存更新：本周总库存 §green§111wt，去库 4.56wt§/§，其中深色混合胶 §green§48.94wt，去库 3.61wt§/§（§key§8.2 青岛仓库火灾，传闻烧掉 2wt 混合胶，去库超预期§/§；今年混合胶去库偏慢、周均 0.1wt，本次大幅去库主要由火灾导致）。"
+   },
+   {
+    "t": "盘面大涨、涨幅大于现货，基差走弱、月差走强：RU 1-5 月差 §red§-10（+45）§/§；NR 连一-连二月差 §red§-60（+25）§/§；RU-NR 2190（-10），BR-NR -1655（-130）。"
+   },
+   {
+    "t": "泰国杯胶 65.5 泰铢 §flat§持平§/§，加工亏损 -474；产区降雨泰国、科特迪瓦正常，越南偏干。"
+   }
+  ]
+ },
+ "2026-08-03": {
+  "ru": [
+   {
+    "h": "供增需弱，去库偏慢，火灾影响有限",
+    "t": "泰国杯胶 65.5 §flat§持平§/§，加工亏损 -840。"
+   },
+   {
+    "t": "截至 8.2 青岛港口库存 §green§65.4wt，环比 -1.41wt（-2.12%）§/§，§key§去库偏慢§/§。"
+   },
+   {
+    "t": "8.2 青岛某仓库起火，影响 20 号胶 605 吨、混合胶 2wt，占比 3%（混合胶库存 60wt 高位），§key§实际影响有限，缺乏基本面利多，天胶开盘冲高回落§/§。"
+   }
+  ],
+  "br": [
+   {
+    "h": "BR-丁二烯走弱，顺丁出口利润走扩，半钢订单弱",
+    "t": "丁二烯山东送到价 §red§10200（+150，+1.49%）§/§，民营竞拍成交 9950，小幅溢价。"
+   },
+   {
+    "t": "BR-丁二烯价差 §green§2370（-175）§/§；顺丁出口利润 §red§3904（+203，来自东南亚顺丁上涨）§/§；BR 基差 §red§280（+25）§/§，连一-连二月差 §green§15（-10）§/§。"
+   }
+  ],
+  "lc": [
+   {
+    "h": "现实强（检修减产+去库加速），预期弱（供给增加+需求增速下滑）",
+    "t": "基差 §flat§-1150（+0）§/§，9-1 月差 §green§1160（-340）§/§；仓单 26552（7 月底老货强制注销后余 2.5wt 新货，今日 +1510，§key§不缺货§/§）。"
+   },
+   {
+    "t": "上周五跌破 14w 后现货成交放量；今日成交一般，§key§下游 8 月货基本备完§/§。"
+   }
+  ]
+ }
+};
+
+const ORDER = {ru:['RU','天然胶'], br:['BR','合成胶'], lc:['LC','碳酸锂']};
+const DATE_KEYS = ["2026-08-12", "2026-08-11", "2026-08-10", "2026-08-07", "2026-08-06", "2026-08-05", "2026-08-04", "2026-08-03"];
+
+function renderMarkup(s){
+  return s
+    .replace(/§key§([^§]+)§\/§/g, '<span class="key">$1</span>')
+    .replace(/§red§([^§]+)§\/§/g, '<span class="up">$1</span>')
+    .replace(/§green§([^§]+)§\/§/g, '<span class="down">$1</span>')
+    .replace(/§flat§([^§]+)§\/§/g, '<span class="flat">$1</span>');
+}
+
+function fmtDate(k){
+  const p = k.split('-');
+  return p[0] + '.' + (+p[1]) + '.' + (+p[2]);
+}
+
+function render(dateKey){
+  const day = DAILY[dateKey] || {};
+  for (const k of ['ru','br','lc']){
+    const items = day[k] || [];
+    const ul = document.getElementById('list-' + k);
+    if (!items.length){
+      ul.innerHTML = '<li class="empty">本日暂无 ' + ORDER[k][0] + ' 日报记录</li>';
+      continue;
+    }
+    let html = '';
+    for (const it of items){
+      if (it.h) html += '<li class="lead"><span class="subhead">' + it.h + '</span></li>';
+      html += '<li>' + renderMarkup(it.t) + '</li>';
+    }
+    ul.innerHTML = html;
+  }
+  document.querySelectorAll('.fbtn').forEach(function(b){ b.classList.toggle('active', b.dataset.d === dateKey); });
+}
+
+(function init(){
+  const box = document.getElementById('dateBtns');
+  DATE_KEYS.forEach(function(k){
+    const btn = document.createElement('div');
+    btn.className = 'fbtn';
+    btn.dataset.d = k;
+    btn.textContent = fmtDate(k);
+    btn.onclick = function(){ render(k); };
+    box.appendChild(btn);
+  });
+  render(DATE_KEYS[0]); // 默认最新日期
+})();
+
+</script>
+</body>
+</html>
