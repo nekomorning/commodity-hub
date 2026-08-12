@@ -496,8 +496,9 @@ function syncFilterUI(){
   const sel = document.getElementById('dateSelect');
   sel.value = curDate;
   const idx = DATE_KEYS.indexOf(curDate);
-  document.getElementById('prevDay').disabled = idx <= 0;
-  document.getElementById('nextDay').disabled = idx < 0 || idx >= DATE_KEYS.length - 1;
+  // 上一日 = 更早（索引+1），已在最旧则禁用；下一日 = 更晚（索引-1），已是最新则禁用
+  document.getElementById('prevDay').disabled = idx >= DATE_KEYS.length - 1;
+  document.getElementById('nextDay').disabled = idx <= 0;
   const ctx = document.getElementById('dateCtx');
   ctx.innerHTML = curDate === DATE_KEYS[0]
     ? '<span class="latest">● 最新</span>'
@@ -606,8 +607,8 @@ function nextMonth(){
 (function init(){
   buildSelect();
   calMonth = DATE_KEYS[0].slice(0,7);
-  document.getElementById('prevDay').onclick = function(){ nav(-1); };
-  document.getElementById('nextDay').onclick = function(){ nav(1); };
+  document.getElementById('prevDay').onclick = function(){ nav(1); };   // 上一日 → 更早
+  document.getElementById('nextDay').onclick = function(){ nav(-1); };  // 下一日 → 更晚
   document.getElementById('todayBtn').onclick = function(){ render(DATE_KEYS[0]); };
   const calBtn = document.getElementById('calBtn');
   const cal = document.getElementById('calPop');
