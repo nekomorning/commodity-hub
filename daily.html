@@ -73,6 +73,13 @@
   .pdot.ru{background:var(--ru);} .pdot.br{background:var(--br);} .pdot.lc{background:var(--lc);}
   .pname{font-size:17px; font-weight:700;}
   .pcode{font-size:11.5px; color:var(--sub); font-weight:600; letter-spacing:.5px; margin-left:auto;}
+  .quote{margin-left:auto; text-align:right; line-height:1.35; font-weight:600;}
+  .quote .q-pri{display:block; font-size:13px; color:var(--ink); font-weight:700; font-variant-numeric:tabular-nums;}
+  .quote .q-chg{display:block; font-size:11.5px; font-weight:700; font-variant-numeric:tabular-nums;}
+  .quote .q-chg .arr{margin-right:1px;}
+  .quote .q-chg.up{color:var(--up);}
+  .quote .q-chg.down{color:var(--down);}
+  .quote .q-chg.flat{color:var(--sub);}
   .panel-body{padding:14px 18px 18px;}
   .sec-title{font-size:12px; font-weight:700; color:var(--sub); letter-spacing:1px; margin-bottom:10px;
     padding-bottom:8px; border-bottom:1px dashed var(--line);}
@@ -129,15 +136,15 @@
 
   <div class="grid" id="grid">
     <section class="panel">
-      <div class="panel-head"><span class="pdot ru"></span><span class="pname">天然胶 RU</span><span class="pcode">上期所 / 能源中心</span></div>
+      <div class="panel-head"><span class="pdot ru"></span><span class="pname">天然胶 RU</span><span class="quote" id="quote-ru">—</span></div>
       <div class="panel-body"><div class="sec-title">日度总结</div><ul class="pts" id="list-ru"></ul></div>
     </section>
     <section class="panel">
-      <div class="panel-head"><span class="pdot br"></span><span class="pname">合成胶 BR</span><span class="pcode">丁二烯系顺丁橡胶</span></div>
+      <div class="panel-head"><span class="pdot br"></span><span class="pname">合成胶 BR</span><span class="quote" id="quote-br">—</span></div>
       <div class="panel-body"><div class="sec-title">日度总结</div><ul class="pts" id="list-br"></ul></div>
     </section>
     <section class="panel">
-      <div class="panel-head"><span class="pdot lc"></span><span class="pname">碳酸锂 LC</span><span class="pcode">广期所 / 锂电产业链</span></div>
+      <div class="panel-head"><span class="pdot lc"></span><span class="pname">碳酸锂 LC</span><span class="quote" id="quote-lc">—</span></div>
       <div class="panel-body"><div class="sec-title">日度总结</div><ul class="pts" id="list-lc"></ul></div>
     </section>
   </div>
@@ -176,7 +183,16 @@ const DAILY = {
    {
     "t": "7 月中汽协数据：新能源车销量 §green§环比 -5%§/§、§red§同比 +24%§/§、累计同比 +10%，其中内销 -12%、出口 §red§+127%§/§。"
    }
-  ]
+  ],
+  "quote": {
+   "ru": null,
+   "br": null,
+   "lc": {
+    "price": 149700,
+    "chg": 3840,
+    "pct": 2.63
+   }
+  }
  },
  "2026-08-11": {
   "lc": [
@@ -220,7 +236,12 @@ const DAILY = {
    {
     "t": "§key§科特迪瓦 7 月出口不及预期§/§（港口拥堵影响发运，产量没问题）：7 月出口 §green§15.75wt，环比 +1.55%、同比 -15.6%、累计同比 -2%§/§；原预期累计同比 +6~8%，§key§存在约 5wt 预期差§/§。出口中国 3.58wt，环比 -1.56%、同比 -12%、累计 +20%。"
    }
-  ]
+  ],
+  "quote": {
+   "ru": null,
+   "br": null,
+   "lc": null
+  }
  },
  "2026-08-10": {
   "lc": [
@@ -264,7 +285,16 @@ const DAILY = {
    {
     "t": "隆众：截至 8.9 青岛天胶保税+一般贸易合计库存 §green§64.5wt，环比 -0.9wt（-1.38%）§/§；保税区 7.01wt（-0.24%），一般贸易 57.49wt（-1.51%）。"
    }
-  ]
+  ],
+  "quote": {
+   "ru": null,
+   "br": null,
+   "lc": {
+    "price": 146360,
+    "chg": 6360,
+    "pct": 4.5
+   }
+  }
  },
  "2026-08-07": {
   "lc": [
@@ -296,7 +326,16 @@ const DAILY = {
    {
     "t": "月差小幅走强：1-5 月差 §red§-10，+5§/§；NR 连一-连二月差 §red§-45，+25§/§；BR-NR 价差 §red§-1610，+125§/§；NR-SICOM 走强回正至 §red§53，+74§/§。"
    }
-  ]
+  ],
+  "quote": {
+   "ru": null,
+   "br": null,
+   "lc": {
+    "price": 140000,
+    "chg": -1460,
+    "pct": -1.04
+   }
+  }
  },
  "2026-08-06": {
   "lc": [
@@ -340,7 +379,16 @@ const DAILY = {
    {
     "t": "轮胎周度：全钢开工 §green§63.64%，-0.16pp§/§，半钢开工 §red§64.57%，+0.59pp§/§；库存天数小幅上升。"
    }
-  ]
+  ],
+  "quote": {
+   "ru": null,
+   "br": null,
+   "lc": {
+    "price": 141460,
+    "chg": -1760,
+    "pct": -1.23
+   }
+  }
  },
  "2026-08-05": {
   "lc": [
@@ -384,7 +432,12 @@ const DAILY = {
    {
     "t": "§key§本周火灾影响混合胶去库超预期（48.94wt，-3.61wt）§/§，其他基本面变化不大。"
    }
-  ]
+  ],
+  "quote": {
+   "ru": null,
+   "br": null,
+   "lc": null
+  }
  },
  "2026-08-04": {
   "lc": [
@@ -422,7 +475,12 @@ const DAILY = {
    {
     "t": "泰国杯胶 65.5 泰铢 §flat§持平§/§，加工亏损 -474；产区降雨泰国、科特迪瓦正常，越南偏干。"
    }
-  ]
+  ],
+  "quote": {
+   "ru": null,
+   "br": null,
+   "lc": null
+  }
  },
  "2026-08-03": {
   "ru": [
@@ -454,7 +512,12 @@ const DAILY = {
    {
     "t": "上周五跌破 14w 后现货成交放量；今日成交一般，§key§下游 8 月货基本备完§/§。"
    }
-  ]
+  ],
+  "quote": {
+   "ru": null,
+   "br": null,
+   "lc": null
+  }
  }
 };
 
@@ -523,6 +586,21 @@ function render(dateKey){
       html += '<li>' + renderMarkup(it.t) + '</li>';
     }
     ul.innerHTML = html;
+  }
+  const qmap = day.quote || {};
+  const labels = {ru: 'RU09', br: 'BR主力', lc: 'LC主力'};
+  for (const k of ['ru','br','lc']){
+    const el = document.getElementById('quote-' + k);
+    const q = qmap[k];
+    if (q && q.price !== undefined && q.price !== null){
+      const dir = q.chg > 0 ? 'up' : (q.chg < 0 ? 'down' : 'flat');
+      const arr = q.chg > 0 ? '▲' : (q.chg < 0 ? '▼' : '◆');
+      const sign = q.chg > 0 ? '+' : '';
+      el.innerHTML = '<span class="q-pri">' + labels[k] + ' · ' + Number(q.price).toLocaleString() + '</span>' +
+        '<span class="q-chg ' + dir + '"><span class="arr">' + arr + '</span>' + sign + q.chg.toLocaleString() + '  ' + sign + (q.pct || 0).toFixed(2) + '%</span>';
+    } else {
+      el.innerHTML = '<span class="q-pri">' + labels[k] + '</span><span class="q-chg flat">— 暂无数据</span>';
+    }
   }
   syncFilterUI();
 }
