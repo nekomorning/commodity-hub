@@ -25,7 +25,18 @@
   .badge{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:4px 12px;
     border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); color:#e8eef5;}
   .badge b{font-weight:700;}
-  .tabs{display:flex; gap:8px; margin-bottom:18px;}
+  .tabs{display:flex; gap:8px; margin-bottom:16px;}
+  .sources{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 20px; margin-bottom:14px;}
+  .sources .flabel{font-size:12.5px; font-weight:700; color:var(--sub); letter-spacing:1px; margin-bottom:10px;}
+  .src-rows{display:flex; flex-direction:column; gap:8px; font-size:13px; line-height:1.7;}
+  .src-row{display:flex; align-items:flex-start; gap:10px;}
+  .src-kind{flex:0 0 64px; font-weight:700; padding:2px 0; border-radius:5px; color:#fff; text-align:center; font-size:12px; height:22px; line-height:18px;}
+  .src-kind.ru{background:var(--ru);} .src-kind.br{background:var(--br);} .src-kind.lc{background:var(--lc);}
+  .src-list{color:#334155; flex:1; line-height:1.9;}
+  .src-list .src-item{display:inline-block; padding:1px 8px; margin:2px 4px 2px 0; background:#f8fafc; border:1px solid var(--line); border-radius:999px; font-size:12.5px;}
+  .src-list .src-item.ru{border-color:#fde68a; color:var(--ru);}
+  .src-list .src-item.br{border-color:#bfdbfe; color:var(--br);}
+  .src-list .src-item.lc{border-color:#ddd6fe; color:var(--lc);}
   .tab{display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-size:14px; font-weight:600;
     padding:9px 20px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:#475569; transition:.15s;}
   .tab:hover{border-color:#93c5fd; color:#1d4ed8;}
@@ -93,6 +104,15 @@
   <a class="tab active" href="https://nekomorning.github.io/commodity-hub/news.html">🔥 最新资讯</a>
 </nav>
 
+<section class="sources">
+  <div class="flabel">📡 重点关注信源（公众号，作为重点抓取参考）</div>
+  <div class="src-rows">
+    <div class="src-row"><span class="src-kind ru">天然胶</span><span class="src-list"><span class="src-item ru">成都打工仔的路</span><span class="src-item ru">逸语投研</span><span class="src-item ru">倪丽华</span><span class="src-item ru">What he said</span><span class="src-item ru">新研究观察</span></span></div>
+    <div class="src-row"><span class="src-kind br">合成胶</span><span class="src-list"><span class="src-item br">铁帽子星</span><span class="src-item br">能化链接者</span></span></div>
+    <div class="src-row"><span class="src-kind lc">碳酸锂</span><span class="src-list"><span class="src-item lc">广期新能源</span><span class="src-item lc">崔东树</span><span class="src-item lc">大东时代智库</span><span class="src-item lc">ESCN 储能网</span><span class="src-item lc">储能头条</span></span></div>
+  </div>
+</section>
+
 <section class="filter">
   <div class="flabel">📅 选择周期（以周为单位，默认最新）</div>
   <div class="frow">
@@ -119,10 +139,27 @@
     <div class="panel-head"><span class="pdot lc"></span><span class="pname">碳酸锂 LC</span><span class="cnt" id="cnt-lc">0 条</span></div>
     <div class="panel-body"><ul class="news" id="list-lc"></ul></div>
   </section>
+
+<div class="daily-title" style="margin-top:20px"><span class="ico">📡</span><span>重点公众号文章（搜狗微信检索 · 按相关度排序，发布详情以公众号内为准）</span></div>
+<div class="grid">
+  <section class="panel">
+    <div class="panel-head"><span class="pdot ru"></span><span class="pname">天然胶 · 公众号</span><span class="cnt">3 篇</span></div>
+    <div class="panel-body"><ul class="news" id="gzh-ru"><li><a class="ntitle" href="https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgSyYIgirMiNdo8LIPSpL9J5N7w8MFCAKtQFqXa8Fplpd9aylhH6CxXFNnxrum7bU0LGC5BGcedTIW5pguiNisxdTMGNlO0WWHhoXJloRNwhSTfFwkgIOdFpdsxUZTOLtsILA685HOlUiuHu-MSyMoVO5QMehTJsVKlHFSdyguOdGkvPJHVroO63DWRsYL-kYZL9Vhfl5kg5SKLN-4GEi99mmE8RsmObDbtQ..&type=2&query=%E9%80%B8%E8%AF%AD%E6%8A%95%E7%A0%94&token=364D7D9E3B1E62CDBFB9E75B8D49B5FFBF154F306A7D277F" target="_blank" rel="noopener">【橡胶二季报】合成胶带动的上涨</a><span class="nsrc">公众号 · 逸语投研</span></li><li><a class="ntitle" href="https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgSyYIgirMiNdo8LIPSpL9J5N7w8MFCAKtQFqXa8Fplpd9aylhH6CxXFNnxrum7bU0LGC5BGcedTIW5pguiNisxdTMGNlO0WWHhnGxPnHtudp-vMQBM6LivZFNY-o0nw8m3RDUlkhEUSg21e7wWNa4H5HbO2ZelOcDYfNpCeu6yJZ9ZIqS5_GRMnUfbr6Tdr8UU4uGOSDul-gQU1rxmErGbTM6Ebq8fk9diw..&type=2&query=%E9%80%B8%E8%AF%AD%E6%8A%95%E7%A0%94&token=364D7D9E3B1E62CDBFB9E75B8D49B5FFBF154F306A7D277F" target="_blank" rel="noopener">橡胶:资金博弈,减仓反弹</a><span class="nsrc">公众号 · 逸语投研</span></li><li><a class="ntitle" href="https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgSyYIgirMiNdoxK3bMhunKWl7w8MFCAKtQFqXa8Fplpd9wJQVHYVisM5t4EaYIZ5IY5Ym7ykKqHg09kFwq0sHVgB5lddND-yp4tY3LdwfVo1LauyRbMNmL8nB45EjDGA2OnjJpeJX8J4Nn6UncTmY7Nbecz9u4LQi90MqaEKVQVHE2PBpwALiuespk8txW29QYh27G9VCa9BWLgex_zJxoDoCYioxHkzTmA..&type=2&query=%E6%88%90%E9%83%BD%E6%89%93%E5%B7%A5%E4%BB%94%E7%9A%84%E8%B7%AF&token=364EA68442671BB4C7C19E22F1EE9F7EC708BC166A7D27B5" target="_blank" rel="noopener">锦湖轮胎2026年H1</a><span class="nsrc">公众号 · 成都打工仔的路</span></li></ul></div>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><span class="pdot br"></span><span class="pname">合成胶 · 公众号</span><span class="cnt">—</span></div>
+    <div class="panel-body"><ul class="news" id="gzh-br"><li class="empty">暂无检索到相关文章，建议直接在微信内查看该公众号</li></ul></div>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><span class="pdot lc"></span><span class="pname">碳酸锂 · 公众号</span><span class="cnt">4 篇</span></div>
+    <div class="panel-body"><ul class="news" id="gzh-lc"><li><a class="ntitle" href="https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgSyYIgirMiNdomiH-rUdmOBh7w8MFCAKtQFqXa8Fplpd90qGd5nJgaLwfoHFGOXlPcD8a9ZoR4rL_QVFE2FdPh80cmLxGIHnlX-cip3SCn3V2T1lXu0YMVghoNzQawvqC0RVFMN3PydbeCvXPqHArSf3EsE2btebIU4PNfQoP6U1zH_j6uTwGmu79OPqCZS9NUNpm7SP-h8iAyjssu-b-OGXuL0unUdKkuw..&type=2&query=ESCN%E5%82%A8%E8%83%BD%E7%BD%91&token=36513F74DBFE832D5F5807BA629CDA0E5FA26A416A7D2824" target="_blank" rel="noopener">储能技术支撑能源变革 产业精英共商未来发展</a><span class="nsrc">公众号 · ESCN储能网</span></li><li><a class="ntitle" href="https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgSyYIgirMiNdoAGoDprSiC_F7w8MFCAKtQFqXa8Fplpd9jWxjY_tO_abWf6UG1hmZ7R3wq7Ci5R0DorXbvAqrnkMU4-JvlnjyBP_VEvTo8asdLr_ufmGTrHm8D_fjxTcmuXXerxvov-6TnVt-t_HH8mJkmGJ12aNtnElc27_EHKB9Fn6MdP4nMOG7mavllPH12LUlop39m1YEqLt1XYKZ4Mfs46dn8Efgxg..&type=2&query=%E5%82%A8%E8%83%BD%E5%A4%B4%E6%9D%A1&token=36519810B58EF35C303668CB0EAB976F30EE8E766A7D2832" target="_blank" rel="noopener">储能头条专访 | 华致能源陈志:用创新理念打造工商业储能第一品牌</a><span class="nsrc">公众号 · 储能头条</span></li><li><a class="ntitle" href="https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgSyYIgirMiNdorh4VXEst-Wx7w8MFCAKtQFqXa8Fplpd9j5M1bHy-ryxOUeMcYaM4LkdGpK5vgOGaGF6MyNENCrIe2ii49hXrmYRQw3sqeDCBCaCQnawJSJfo41A2TQgt36_e-vO19hJFogf2bzOitqXowRR41CBrdNtgEBTVEHqtDG0p_XaQ0m41Nf7ON0bMOfskyWQ7uX9yRTX6g73x_7xAe0f8bRARvQ..&type=2&query=%E5%A4%A7%E4%B8%9C%E6%97%B6%E4%BB%A3%E6%99%BA%E5%BA%93&token=3651E99927037DD2A2A4FA459ED795D9A208CE696A7D2840" target="_blank" rel="noopener">法巴证券购买大东时代智库数据 加码储能赛道精准投资布局</a><span class="nsrc">公众号 · 大东时代智库</span></li><li><a class="ntitle" href="https://weixin.sogou.com/link?url=dn9a_-gY295K0Rci_xozVXfdMkSQTLW6cwJThYulHEtVjXrGTiVgSyYIgirMiNdoc9Gi_xap-qN7w8MFCAKtQFqXa8Fplpd9-X3wMaakD2ucEX91GeeM3vBnH5xjV4F6ednDPqQ6aiRoCl1XARRWUuawNsHp5XLnZHm3ZddgAjNVXjxi5IBh25l8E1SUYS0AWmyvD_nXlR2Rchqgr4qmY8qWXdCFcIetqlvwwZpkReKbogYTKnVIPe-6BDcipwTotZ1m6IfOJAHFcvUoAZZH7Q..&type=2&query=%E5%B4%94%E4%B8%9C%E6%A0%91&token=36523A1E9DB9C46417114FFC5758A7F71820E1926A7D284F" target="_blank" rel="noopener">崔东树:国内动力电池的发展面临着巨大增长压力</a><span class="nsrc">公众号 · 崔东树</span></li></ul></div>
+  </section>
+</div>
+
 </div>
 
 <footer>
-  <div>资讯检索自全网公开信源，标题与链接指向原文出处（新窗口打开）；信源含证券时报、期货公司研报平台（曲合/18qh/慧博/发现报告/期货快查）、隆众、SMM、Mysteel、行业期刊（ERJ）等。</div>
+  <div>资讯检索自全网公开信源（含证券时报、期货公司研报平台、隆众、SMM、Mysteel、行业期刊等）以及用户指定的 12 个重点微信公众号（天然胶 5 个、合成胶 2 个、碳酸锂 5 个）；标题与链接指向原文出处（新窗口打开）。</div>
   <div>聚合导航首页 <span class="hl">nekomorning.github.io/commodity-hub</span> · 日报汇总 <span class="hl">/daily.html</span> · 最新资讯 <span class="hl">/news.html</span></div>
 </footer>
 
