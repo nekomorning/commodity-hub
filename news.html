@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RU/BR/LC 最新资讯 · 大宗商品数据看板</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --line:#e5e9f0; --ink:#1f2937; --sub:#6b7280;
+    --ru:#b45309; --br:#2563eb; --lc:#7c3aed;
+    --up:#d92c2c; --down:#0f9d58; --flat:#9ca3af; --key:#1d4ed8;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.6; padding:28px 16px 60px;}
+  .wrap{max-width:1240px; margin:0 auto;}
+  header{background:linear-gradient(135deg,#1e2a3a 0%,#2d3f57 100%); color:#fff; border-radius:16px;
+    padding:26px 32px 20px; margin-bottom:20px; position:relative; overflow:hidden;}
+  header::after{content:""; position:absolute; right:-60px; top:-60px; width:240px; height:240px;
+    border-radius:50%; background:rgba(255,255,255,.06);}
+  .crumbs{font-size:13px; color:#9fb3c8; letter-spacing:1px; margin-bottom:8px;}
+  header h1{font-size:24px; font-weight:700; letter-spacing:1px;}
+  header .sub{margin-top:6px; color:#c8d6e5; font-size:13.5px;}
+  header .meta{margin-top:12px; display:flex; flex-wrap:wrap; gap:10px;}
+  .badge{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:4px 12px;
+    border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); color:#e8eef5;}
+  .badge b{font-weight:700;}
+  .tabs{display:flex; gap:8px; margin-bottom:18px;}
+  .tab{display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-size:14px; font-weight:600;
+    padding:9px 20px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:#475569; transition:.15s;}
+  .tab:hover{border-color:#93c5fd; color:#1d4ed8;}
+  .tab.active{background:#1e2a3a; color:#fff; border-color:#1e2a3a;}
+  .filter{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 20px; margin-bottom:14px; position:relative;}
+  .filter .flabel{font-size:12.5px; font-weight:700; color:var(--sub); letter-spacing:1px; margin-bottom:10px;}
+  .filter .frow{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .fnav{font-size:14px; font-weight:700; padding:7px 13px; border-radius:9px; cursor:pointer; user-select:none;
+    border:1px solid var(--line); background:#fff; color:#475569; transition:.12s; line-height:1.2;}
+  .fnav:hover{border-color:#93c5fd; color:#1d4ed8;}
+  .fnav:disabled{opacity:.35; cursor:not-allowed;}
+  .fnav.ghost{font-size:12.5px; font-weight:600; padding:7px 12px;}
+  .fselect{font-size:14.5px; font-weight:700; color:#111827; padding:7px 10px; border-radius:9px;
+    border:1.5px solid #1e2a3a; background:#fff; cursor:pointer; min-width:180px; font-family:inherit;}
+  .fselect:focus{outline:none; border-color:#1d4ed8;}
+  .fctx{font-size:12.5px; font-weight:600; color:var(--sub); margin-left:4px;}
+  .fctx .latest{color:#0f766e; background:#f0fdfa; border:1px solid #99d5cf; border-radius:999px; padding:2px 10px; font-size:11.5px;}
+  .daily-title{font-size:19px; font-weight:700; color:var(--ink); padding:14px 20px; background:var(--card);
+    border:1px solid var(--line); border-radius:14px; margin-bottom:14px; display:flex; align-items:center; gap:10px;}
+  .daily-title .ico{font-size:18px;}
+  .daily-title .date{color:#1d4ed8;}
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  @media (max-width:1000px){.grid{grid-template-columns:1fr;}}
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden;
+    display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(16,24,40,.05);}
+  .panel-head{padding:16px 18px 12px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px;}
+  .pdot{width:11px; height:11px; border-radius:50%; flex:0 0 auto;}
+  .pdot.ru{background:var(--ru);} .pdot.br{background:var(--br);} .pdot.lc{background:var(--lc);}
+  .pname{font-size:17px; font-weight:700;}
+  .cnt{margin-left:auto; font-size:11.5px; font-weight:700; color:#0f766e; background:#f0fdfa;
+    border:1px solid #99d5cf; border-radius:999px; padding:2px 10px;}
+  .panel-body{padding:12px 14px 16px;}
+  ul.news{list-style:none;}
+  ul.news li{position:relative; padding:10px 8px 10px 12px; border-bottom:1px dashed var(--line);}
+  ul.news li:last-child{border-bottom:none;}
+  ul.news li::before{content:""; position:absolute; left:0; top:17px; width:5px; height:5px; border-radius:50%; background:#cbd5e1;}
+  ul.news li:hover{background:#f8fafc; border-radius:8px;}
+  .ndate{display:inline-block; font-size:11px; font-weight:700; color:#fff; background:#1e2a3a;
+    border-radius:5px; padding:1px 6px; margin-right:8px; vertical-align:2px; font-variant-numeric:tabular-nums;}
+  .ntitle{font-size:13.5px; font-weight:600; color:var(--key); text-decoration:none; line-height:1.5;}
+  .ntitle:hover{text-decoration:underline; color:#1e40af;}
+  .nsrc{display:block; font-size:11px; color:var(--sub); margin-top:3px; padding-left:0;}
+  .nsrc::before{content:"来源 · "; color:#94a3b8;}
+  .empty{font-size:13px; color:var(--flat); font-style:italic; padding:12px 4px;}
+  footer{margin-top:26px; font-size:12px; color:var(--sub); text-align:center; line-height:1.9;}
+  footer .hl{color:#0f766e; font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="crumbs">大宗商品数据看板 · 导航中心</div>
+  <h1>RU / BR / LC 最新资讯</h1>
+  <div class="sub">从全网可靠信源（证券时报 / 期货公司研报 / 隆众 / SMM / Mysteel / 行业媒体）检索三品种最新消息，按周分组展示，点击标题跳转原文</div>
+  <div class="meta">
+    <span class="badge">检索时间 <b>2026-08-13</b></span>
+    <span class="badge">覆盖周期 <b>本周（08.10-08.13）· 上周（08.03-08.09）</b></span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <a class="tab" href="https://nekomorning.github.io/commodity-hub/index.html">🏠 首页 · 汇总导航</a>
+  <a class="tab" href="https://nekomorning.github.io/commodity-hub/daily.html">📰 日报汇总</a>
+  <a class="tab active" href="https://nekomorning.github.io/commodity-hub/news.html">🔥 最新资讯</a>
+</nav>
+
+<section class="filter">
+  <div class="flabel">📅 选择周期（以周为单位，默认最新）</div>
+  <div class="frow">
+    <button class="fnav" id="prevWeek" title="上一周">◀ 上一周</button>
+    <select class="fselect" id="weekSelect"></select>
+    <button class="fnav" id="nextWeek" title="下一周">下一周 ▶</button>
+    <button class="fnav ghost" id="latestWeek" title="回到最新一周">⏱ 最新</button>
+    <span class="fctx" id="weekCtx"></span>
+  </div>
+</section>
+
+<div class="daily-title"><span class="ico">🔥</span><span>最新资讯 ·</span><span class="date" id="weekLabel">—</span></div>
+
+<div class="grid">
+  <section class="panel">
+    <div class="panel-head"><span class="pdot ru"></span><span class="pname">天然胶 RU</span><span class="cnt" id="cnt-ru">0 条</span></div>
+    <div class="panel-body"><ul class="news" id="list-ru"></ul></div>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><span class="pdot br"></span><span class="pname">合成胶 BR</span><span class="cnt" id="cnt-br">0 条</span></div>
+    <div class="panel-body"><ul class="news" id="list-br"></ul></div>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><span class="pdot lc"></span><span class="pname">碳酸锂 LC</span><span class="cnt" id="cnt-lc">0 条</span></div>
+    <div class="panel-body"><ul class="news" id="list-lc"></ul></div>
+  </section>
+</div>
+
+<footer>
+  <div>资讯检索自全网公开信源，标题与链接指向原文出处（新窗口打开）；信源含证券时报、期货公司研报平台（曲合/18qh/慧博/发现报告/期货快查）、隆众、SMM、Mysteel、行业期刊（ERJ）等。</div>
+  <div>聚合导航首页 <span class="hl">nekomorning.github.io/commodity-hub</span> · 日报汇总 <span class="hl">/daily.html</span> · 最新资讯 <span class="hl">/news.html</span></div>
+</footer>
+
+</div>
+<script>
+const NEWS = {
+ "W1": {
+  "label": "本周（08.10 - 08.13）",
+  "ru": [
+   {
+    "d": "08-12",
+    "t": "全球橡胶价格延续强势运行 合成胶主力涨超2%",
+    "s": "曲合期货",
+    "u": "https://m.quheqihuo.com/news/202608124479912.html"
+   },
+   {
+    "d": "08-12",
+    "t": "光大期货能源化工日报：沪胶主力RU2609收16960元/吨 预计震荡",
+    "s": "新浪财经",
+    "u": "https://finance.sina.cn/futuremarket/qszx/2026-08-12/detail-inimzqcs5340116.d.html"
+   },
+   {
+    "d": "08-12",
+    "t": "Rubber futures rise on stronger physical demand",
+    "s": "European Rubber Journal",
+    "u": "https://www.european-rubber-journal.com/article/2099562/rubber-futures-rise-on-stronger-physical-demand"
+   },
+   {
+    "d": "08-11",
+    "t": "全球橡胶价格全线上涨 合成胶主力涨超1%",
+    "s": "曲合期货",
+    "u": "https://www.quheqihuo.com/news/202608114479439.html"
+   },
+   {
+    "d": "08-10",
+    "t": "银河期货早盘观察：天然橡胶及20号胶 NR仓单重新累库",
+    "s": "慧博投研",
+    "u": "https://m.hibor.com.cn/wap_detail.aspx?id=abd2ca87d4dc285153125b84c0bce52b"
+   }
+  ],
+  "br": [
+   {
+    "d": "08-12",
+    "t": "合成橡胶强势站上13400元 成本端点燃多头引信",
+    "s": "曲合期货",
+    "u": "https://www.quheqihuo.com/news/202608124479685.html"
+   },
+   {
+    "d": "08-10",
+    "t": "合成橡胶投资周报：成本端丁二烯支撑 BR价格筑底反弹",
+    "s": "报告人网",
+    "u": "https://reportify.cn/reports/1284158572019716096"
+   }
+  ],
+  "lc": [
+   {
+    "d": "08-13",
+    "t": "突破150000元/吨 碳酸锂强现实行情能否持续",
+    "s": "证券时报·新浪财经",
+    "u": "https://finance.sina.com.cn/roll/2026-08-13/doc-inincnuy3433029.shtml"
+   },
+   {
+    "d": "08-13",
+    "t": "国泰君安盘前Plus+：碳酸锂加速去库或支撑锂价反弹",
+    "s": "新浪财经",
+    "u": "https://k.sina.com.cn/article_5953466437_162dab0450670b8sl0.html"
+   },
+   {
+    "d": "08-13",
+    "t": "锂云母提锂多项技术难题攻克 碳酸锂供需偏紧（附绩优股）",
+    "s": "证券之星",
+    "u": "https://stock.stockstar.com/SS2026081300007180.shtml"
+   },
+   {
+    "d": "08-12",
+    "t": "Mysteel快讯：电池级碳酸锂市场价格上调3250元/吨",
+    "s": "Mysteel",
+    "u": "https://www.mysteel.com/hot/1541866.html"
+   }
+  ]
+ },
+ "W2": {
+  "label": "上周（08.03 - 08.09）",
+  "ru": [
+   {
+    "d": "08-09",
+    "t": "华泰期货化工周报：原料价格支撑重新显现（RU谨慎偏多）",
+    "s": "发现报告",
+    "u": "https://www.fxbaogao.com/detail/5589115"
+   }
+  ],
+  "br": [
+   {
+    "d": "08-09",
+    "t": "华泰期货化工周报：丁二烯装置检修支撑价格 顺丁成本支撑显现",
+    "s": "发现报告",
+    "u": "https://www.fxbaogao.com/detail/5589115"
+   },
+   {
+    "d": "08-07",
+    "t": "合成橡胶：8月BR供需双增 且成本支撑有限 BR预计偏弱震荡",
+    "s": "18qh",
+    "u": "https://www.18qh.com/zixun/c-2026-08-07-4478251.html"
+   },
+   {
+    "d": "08-06",
+    "t": "瑞达期货合成橡胶产业日报：丁二烯CFR中国2580美元/吨",
+    "s": "期货快查",
+    "u": "https://x.qhkch.com/reports/reportId?id=192085"
+   }
+  ],
+  "lc": [
+   {
+    "d": "08-09",
+    "t": "爱建汽车行业周报：电池级碳酸锂均价142750元/吨 环比-0.2%",
+    "s": "新浪财经",
+    "u": "https://finance.sina.com.cn/roll/2026-08-11/doc-inimxvum4251810.shtml"
+   }
+  ]
+ }
+};
+const WEEK_KEYS = ["W1", "W2"];
+
+const ORDER = {ru:['RU','天然胶'], br:['BR','合成胶'], lc:['LC','碳酸锂']};
+let curWeek = null;
+
+function render(weekKey){
+  curWeek = weekKey;
+  const wk = NEWS[weekKey] || {ru:[],br:[],lc:[]};
+  document.getElementById('weekLabel').textContent = wk.label;
+  for (const k of ['ru','br','lc']){
+    const items = wk[k] || [];
+    const ul = document.getElementById('list-' + k);
+    document.getElementById('cnt-' + k).textContent = items.length + ' 条';
+    if (!items.length){
+      ul.innerHTML = '<li class="empty">本周暂无 ' + ORDER[k][0] + ' 相关资讯</li>';
+      continue;
+    }
+    let html = '';
+    for (const it of items){
+      html += '<li>' +
+        '<span class="ndate">' + it.d + '</span>' +
+        '<a class="ntitle" href="' + it.u + '" target="_blank" rel="noopener">' + it.t + '</a>' +
+        '<span class="nsrc">' + it.s + '</span>' +
+        '</li>';
+    }
+    ul.innerHTML = html;
+  }
+  const sel = document.getElementById('weekSelect');
+  sel.value = weekKey;
+  const idx = WEEK_KEYS.indexOf(weekKey);
+  document.getElementById('prevWeek').disabled = idx >= WEEK_KEYS.length - 1;
+  document.getElementById('nextWeek').disabled = idx <= 0;
+  const ctx = document.getElementById('weekCtx');
+  ctx.innerHTML = weekKey === WEEK_KEYS[0]
+    ? '<span class="latest">● 最新</span>'
+    : '<span>' + wk.label + '</span>';
+}
+
+function nav(delta){
+  const idx = WEEK_KEYS.indexOf(curWeek);
+  const ni = idx + delta;
+  if (ni < 0 || ni >= WEEK_KEYS.length) return;
+  render(WEEK_KEYS[ni]);
+}
+
+(function init(){
+  const sel = document.getElementById('weekSelect');
+  let html = '';
+  WEEK_KEYS.forEach(function(k){
+    html += '<option value="' + k + '">' + NEWS[k].label + '</option>';
+  });
+  sel.innerHTML = html;
+  sel.onchange = function(){ render(this.value); };
+  document.getElementById('prevWeek').onclick = function(){ nav(1); };
+  document.getElementById('nextWeek').onclick = function(){ nav(-1); };
+  document.getElementById('latestWeek').onclick = function(){ render(WEEK_KEYS[0]); };
+  render(WEEK_KEYS[0]); // 默认最新一周
+})();
+</script>
+</body>
+</html>
