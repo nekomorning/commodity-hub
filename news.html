@@ -515,11 +515,26 @@ function nav(delta){
 <script>
 (function(){
   var PWD = atob('c3Vpaml1ODg=');
+  var KEY = 'wb_unlock';
+  var TS = 'wb_unlock_ts';
+  var HOURS = 8;
   var screen = document.getElementById('lockScreen');
   var pwd = document.getElementById('lockPwd');
   var err = document.getElementById('lockErr');
+  function remembered(){
+    try {
+      if (sessionStorage.getItem(KEY) === '1') return true;
+      var ts = parseInt(localStorage.getItem(TS) || '0', 10);
+      if (ts && (Date.now() - ts) < HOURS * 3600 * 1000) return true;
+    } catch(e) {}
+    return false;
+  }
+  function remember(){
+    try { sessionStorage.setItem(KEY, '1'); localStorage.setItem(TS, String(Date.now())); } catch(e) {}
+  }
   function unlock(){
     if (pwd.value === PWD) {
+      remember();
       screen.style.display = 'none';
       document.body.style.overflow = '';
     } else {
@@ -528,10 +543,14 @@ function nav(delta){
       pwd.focus();
     }
   }
-  document.getElementById('lockBtn').addEventListener('click', unlock);
-  pwd.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
-  document.body.style.overflow = 'hidden';
-  pwd.focus();
+  if (remembered()) {
+    screen.style.display = 'none';
+  } else {
+    document.getElementById('lockBtn').addEventListener('click', unlock);
+    pwd.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
+    document.body.style.overflow = 'hidden';
+    pwd.focus();
+  }
 })();
 </script>
 </body>
