@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚠️ 异常数据预警 · RU / BR / LC</title>
+<style>
+  :root{
+    --bg:#f1f5f9; --card:#ffffff; --line:#e2e8f0; --ink:#1e2a3a; --sub:#64748b;
+    --ru:#d97706; --br:#2563eb; --lc:#7c3aed;
+    --up:#d92c2c; --down:#0f9d58; --flat:#9ca3af;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg); color:var(--ink); font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif; font-size:14px; line-height:1.6;}
+  .wrap{max-width:1320px; margin:0 auto; padding:22px 26px 40px;}
+  .tabs{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;}
+  .tab{text-decoration:none; font-size:13px; font-weight:600; padding:7px 16px; border-radius:9px;
+    background:#fff; border:1px solid var(--line); color:#475569; transition:.12s;}
+  .tab:hover{border-color:#93c5fd; color:#1d4ed8;}
+  .tab.active{background:#1e2a3a; color:#fff; border-color:#1e2a3a;}
+  header{background:linear-gradient(135deg,#1e2a3a 0%,#2d3f57 100%); color:#fff; border-radius:14px;
+    padding:18px 28px; margin-bottom:16px;}
+  header h1{font-size:22px; font-weight:700; letter-spacing:1px;}
+  header .sub{margin-top:4px; color:#c8d6e5; font-size:13px;}
+  header .meta{margin-top:10px; display:flex; flex-wrap:wrap; gap:8px;}
+  .badge{font-size:11.5px; padding:4px 12px; border-radius:999px; background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.18); color:#dbe6f2;}
+  .rule{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 18px; margin-bottom:16px;
+    font-size:12.5px; color:var(--sub);}
+  .rule b{color:var(--ink);}
+  .grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px;}
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; display:flex; flex-direction:column;}
+  .panel-head{display:flex; align-items:center; gap:9px; padding:13px 18px; border-bottom:1px solid var(--line);}
+  .pdot{width:9px; height:9px; border-radius:50%; flex:none;}
+  .pdot.ru{background:var(--ru);} .pdot.br{background:var(--br);} .pdot.lc{background:var(--lc);}
+  .pname{font-size:15px; font-weight:700;}
+  .pcount{margin-left:auto; font-size:12px; font-weight:700; padding:3px 11px; border-radius:999px; background:#fef2f2; color:#dc2626; border:1px solid #fecaca;}
+  .pcount.zero{background:#f0fdf4; color:#16a34a; border-color:#bbf7d0;}
+  .panel-body{padding:12px 16px 16px;}
+  .alist{list-style:none; display:flex; flex-direction:column; gap:9px;}
+  .aitem{border:1px solid var(--line); border-radius:10px; padding:9px 12px; background:#fafbfc;}
+  .aitem .row1{display:flex; align-items:center; gap:7px; flex-wrap:wrap;}
+  .aitem .aname{font-weight:700; font-size:13.5px;}
+  .chip{font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px; white-space:nowrap;}
+  .chip.big_up{background:#fef2f2; color:#dc2626; border:1px solid #fecaca;}
+  .chip.big_down{background:#ecfdf5; color:#059669; border:1px solid #a7f3d0;}
+  .chip.streak_up{background:#fff7ed; color:#c2410c; border:1px solid #fed7aa;}
+  .chip.streak_down{background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;}
+  .aitem .row2{margin-top:5px; font-size:12.5px; color:#475569; display:flex; flex-wrap:wrap; gap:4px 14px;}
+  .aitem .v{font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums;}
+  .aitem .up{color:var(--up);} .aitem .down{color:var(--down);}
+  .empty{color:#94a3b8; font-size:13px; padding:14px 4px;}
+  footer{text-align:center; color:#94a3b8; font-size:12px; margin-top:22px; line-height:1.8;}
+  @media (max-width:520px){.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div id="lockScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:linear-gradient(135deg,#eef2f7 0%,#e2e8f0 100%);display:flex;align-items:center;justify-content:center;font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;">
+  <div style="background:#fff;border:1px solid #dbe3ee;border-radius:18px;box-shadow:0 20px 60px rgba(30,42,58,.18);width:340px;padding:36px 34px 30px;text-align:center;">
+    <div style="width:56px;height:56px;margin:0 auto 14px;border-radius:50%;background:linear-gradient(135deg,#1e2a3a,#2d3f57);display:flex;align-items:center;justify-content:center;font-size:26px;">&#128274;</div>
+    <div style="font-size:19px;font-weight:700;color:#1e2a3a;letter-spacing:.5px;">RU / BR / LC 汇总看板</div>
+    <div style="font-size:12.5px;color:#7b8aa0;margin:6px 0 20px;">请输入访问密码以继续</div>
+    <input id="lockPwd" type="password" placeholder="输入密码" autocomplete="off" style="width:100%;box-sizing:border-box;padding:11px 14px;border:1px solid #cbd5e1;border-radius:10px;font-size:15px;outline:none;text-align:center;background:#f8fafc;" onfocus="this.style.borderColor='#1d4ed8';this.style.background='#fff';" onblur="this.style.borderColor='#cbd5e1';this.style.background='#f8fafc';">
+    <div id="lockErr" style="display:none;color:#dc2626;font-size:12.5px;margin:9px 0 0;">&#10060; 密码错误，无法打开看板</div>
+    <button id="lockBtn" style="width:100%;margin-top:16px;padding:11px 0;border:none;border-radius:10px;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:2px;" onmouseover="this.style.filter='brightness(1.08)'" onmouseout="this.style.filter='none'">解 锁</button>
+    <div style="font-size:11px;color:#a5b2c4;margin-top:16px;">数据看板 · 仅授权用户访问</div>
+  </div>
+</div>
+
+
+<div class="wrap">
+  <nav class="tabs">
+    <a class="tab" href="https://nekomorning.github.io/commodity-hub/index.html">🏠 首页 · 汇总导航</a>
+    <a class="tab" href="https://nekomorning.github.io/commodity-hub/daily.html">📰 日报汇总</a>
+    <a class="tab" href="https://nekomorning.github.io/commodity-hub/news.html">🔥 最新资讯</a>
+    <a class="tab active" href="https://nekomorning.github.io/commodity-hub/alert.html">⚠️ 异常预警</a>
+  </nav>
+
+  <header>
+    <h1>⚠️ 异常数据预警</h1>
+    <div class="sub">基于三个看板最新数据自动检测 —— 各品种指标出现大幅上涨 / 大幅下跌 / 连续多日同向运行时的重点提示</div>
+    <div class="meta">
+      <span class="badge">检测时间 <b id="genTime">—</b></span>
+      <span class="badge">RU 预警 <b id="cnt-ru">0</b> 条</span>
+      <span class="badge">BR 预警 <b id="cnt-br">0</b> 条</span>
+      <span class="badge">LC 预警 <b id="cnt-lc">0</b> 条</span>
+    </div>
+  </header>
+
+  <div class="rule">
+    <b>检测规则：</b>① 单日大幅 —— 价差/基差/利润类当日变动 ≥ 3 倍近 60 日标准差（且 ≥ 10），价格/库存/产量类日涨跌幅 ≥ 3%（且偏离常态波动）或 ≥ 5%；② 连续多日 —— 同向运行 ≥ 3 天且累计变动 ≥ 2 倍标准差。数据源：三个看板最新构建 JSON，红涨绿跌。
+  </div>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panel-head"><span class="pdot ru"></span><span class="pname">天然胶 RU</span><span class="pcount" id="pc-ru">0 条</span></div>
+      <div class="panel-body"><ul class="alist" id="list-ru"></ul></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><span class="pdot br"></span><span class="pname">合成胶 BR</span><span class="pcount" id="pc-br">0 条</span></div>
+      <div class="panel-body"><ul class="alist" id="list-br"></ul></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><span class="pdot lc"></span><span class="pname">碳酸锂 LC</span><span class="pcount" id="pc-lc">0 条</span></div>
+      <div class="panel-body"><ul class="alist" id="list-lc"></ul></div>
+    </section>
+  </div>
+
+  <footer>
+    预警由程序根据看板数据自动生成，供研究参考，不构成投资建议。<br>
+    数据覆盖：天然胶（RU）/ 合成胶（BR）/ 碳酸锂（LC）三看板全部指标，检测于 <span id="genTime2">—</span> 更新。
+  </footer>
+</div>
+
+<script>
+const ALERT = {
+ "generatedAt": "2026-08-18 23:11",
+ "ru": [
+  {
+   "name": "NR连一-连二月差",
+   "value": -215,
+   "dv": -135,
+   "pct": -168.75,
+   "streak": 2,
+   "cum": -150,
+   "tags": [
+    "big_down"
+   ]
+  },
+  {
+   "name": "NR-SICOM",
+   "value": 4,
+   "dv": -30,
+   "pct": -87.05,
+   "streak": 2,
+   "cum": -36,
+   "tags": [
+    "big_down"
+   ]
+  },
+  {
+   "name": "顺丁-泰混价差",
+   "value": -2810,
+   "dv": 250,
+   "pct": 8.17,
+   "streak": 5,
+   "cum": 850,
+   "tags": [
+    "streak_up"
+   ]
+  },
+  {
+   "name": "RU5-9月差",
+   "value": -100,
+   "dv": 10,
+   "pct": 9.09,
+   "streak": 3,
+   "cum": 80,
+   "tags": [
+    "streak_up"
+   ]
+  }
+ ],
+ "br": [
+  {
+   "name": "ABS表需",
+   "value": 146300,
+   "dv": 22700,
+   "pct": 18.37,
+   "streak": 3,
+   "cum": 30700,
+   "tags": [
+    "big_up"
+   ]
+  },
+  {
+   "name": "丁二烯港口库存",
+   "value": 31950,
+   "dv": -7500,
+   "pct": -19.01,
+   "streak": 1,
+   "cum": -7500,
+   "tags": [
+    "big_down"
+   ]
+  },
+  {
+   "name": "丁二烯CIF中国",
+   "value": 1450,
+   "dv": 50,
+   "pct": 3.57,
+   "streak": 5,
+   "cum": 150,
+   "tags": [
+    "big_up",
+    "streak_up"
+   ]
+  },
+  {
+   "name": "SBS表需",
+   "value": 17195,
+   "dv": 1155,
+   "pct": 7.2,
+   "streak": 2,
+   "cum": 3032,
+   "tags": [
+    "big_up"
+   ]
+  },
+  {
+   "name": "SBS贸易商库存",
+   "value": 16860,
+   "dv": 950,
+   "pct": 5.97,
+   "streak": 2,
+   "cum": 1470,
+   "tags": [
+    "big_up"
+   ]
+  },
+  {
+   "name": "SBS总库存",
+   "value": 19980,
+   "dv": 1010,
+   "pct": 5.32,
+   "streak": 2,
+   "cum": 1430,
+   "tags": [
+    "big_up"
+   ]
+  },
+  {
+   "name": "丁二烯FOB欧洲",
+   "value": 1040,
+   "dv": 50,
+   "pct": 5.05,
+   "streak": 2,
+   "cum": 70,
+   "tags": [
+    "big_up"
+   ]
+  },
+  {
+   "name": "丁二烯及下游合计库存",
+   "value": 137272,
+   "dv": -11555,
+   "pct": -7.76,
+   "streak": 1,
+   "cum": -11555,
+   "tags": [
+    "big_down"
+   ]
+  },
+  {
+   "name": "ABS总库存",
+   "value": 195000,
+   "dv": -16000,
+   "pct": -7.58,
+   "streak": 1,
+   "cum": -16000,
+   "tags": [
+    "big_down"
+   ]
+  },
+  {
+   "name": "丁苯橡胶价格",
+   "value": 14800,
+   "dv": 600,
+   "pct": 4.23,
+   "streak": 2,
+   "cum": 800,
+   "tags": [
+    "big_up"
+   ]
+  },
+  {
+   "name": "SBS周产量",
+   "value": 15995,
+   "dv": -1175,
+   "pct": -6.84,
+   "streak": 1,
+   "cum": -1175,
+   "tags": [
+    "big_down"
+   ]
+  },
+  {
+   "name": "SBS开工",
+   "value": 41,
+   "dv": -3,
+   "pct": -6.84,
+   "streak": 1,
+   "cum": -3,
+   "tags": [
+    "big_down"
+   ]
+  }
+ ],
+ "lc": [
+  {
+   "name": "碳酸锂总库存",
+   "value": 93908,
+   "dv": -7196,
+   "pct": -7.12,
+   "streak": 15,
+   "cum": -49533,
+   "tags": [
+    "big_down",
+    "streak_down"
+   ]
+  },
+  {
+   "name": "电池：三元电池库存天数",
+   "value": 51,
+   "dv": 11,
+   "pct": 28.04,
+   "streak": 1,
+   "cum": 11,
+   "tags": [
+    "big_up"
+   ]
+  },
+  {
+   "name": "周度库存变化",
+   "value": -7196,
+   "dv": -423,
+   "pct": -6.25,
+   "streak": 7,
+   "cum": -5989,
+   "tags": [
+    "big_down",
+    "streak_down"
+   ]
+  },
+  {
+   "name": "下游正极厂库存",
+   "value": 37496,
+   "dv": -5943,
+   "pct": -13.68,
+   "streak": 4,
+   "cum": -14146,
+   "tags": [
+    "big_down",
+    "streak_down"
+   ]
+  },
+  {
+   "name": "电池：磷酸铁锂电池库存天数",
+   "value": 25,
+   "dv": 1,
+   "pct": 6.16,
+   "streak": 2,
+   "cum": 2,
+   "tags": [
+    "big_up"
+   ]
+  },
+  {
+   "name": "锂盐厂库存",
+   "value": 14422,
+   "dv": -1218,
+   "pct": -7.79,
+   "streak": 1,
+   "cum": -1218,
+   "tags": [
+    "big_down"
+   ]
+  },
+  {
+   "name": "锂矿库存：港口（吨LCE）",
+   "value": 30375,
+   "dv": -1875,
+   "pct": -5.81,
+   "streak": 1,
+   "cum": -1875,
+   "tags": [
+    "big_down"
+   ]
+  },
+  {
+   "name": "贸易商及电芯厂库存",
+   "value": 41990,
+   "dv": -35,
+   "pct": -0.08,
+   "streak": 13,
+   "cum": -40147,
+   "tags": [
+    "streak_down"
+   ]
+  },
+  {
+   "name": "仓单",
+   "value": 37369,
+   "dv": 680,
+   "pct": 1.85,
+   "streak": 12,
+   "cum": 12327,
+   "tags": [
+    "streak_up"
+   ]
+  },
+  {
+   "name": "正极：磷酸铁锂价格",
+   "value": 57220,
+   "dv": 120,
+   "pct": 0.21,
+   "streak": 10,
+   "cum": 3940,
+   "tags": [
+    "streak_up"
+   ]
+  },
+  {
+   "name": "碳酸锂产量：盐湖来源",
+   "value": 5796,
+   "dv": 140,
+   "pct": 2.48,
+   "streak": 7,
+   "cum": 1211,
+   "tags": [
+    "streak_up"
+   ]
+  },
+  {
+   "name": "碳酸锂开工：盐湖来源",
+   "value": 90,
+   "dv": 2,
+   "pct": 2.44,
+   "streak": 7,
+   "cum": 19,
+   "tags": [
+    "streak_up"
+   ]
+  }
+ ]
+};
+
+const ORDER = {ru: ['ru', '天然胶 RU'], br: ['br', '合成胶 BR'], lc: ['lc', '碳酸锂 LC']};
+const TAG_META = {
+  big_up:     {cls: 'big_up',     text: '🔴 单日大幅上涨'},
+  big_down:   {cls: 'big_down',   text: '🟢 单日大幅下跌'},
+  streak_up:  {cls: 'streak_up',  text: '📈 连续多日上涨'},
+  streak_down:{cls: 'streak_down',text: '📉 连续多日下跌'},
+};
+
+function fmtN(v){
+  return String(v);
+}
+
+function renderList(kind){
+  const items = ALERT[kind] || [];
+  const ul = document.getElementById('list-' + kind);
+  const pc = document.getElementById('pc-' + kind);
+  const cntEl = document.getElementById('cnt-' + kind);
+  cntEl.textContent = String(items.length);
+  if (!items.length){
+    pc.textContent = '0 条';
+    pc.className = 'pcount zero';
+    ul.innerHTML = '<li class="empty">✅ 暂无异常指标</li>';
+    return;
+  }
+  pc.textContent = items.length + ' 条';
+  pc.className = 'pcount';
+  let html = '';
+  for (const it of items){
+    let chips = '';
+    for (const t of it.tags){
+      const m = TAG_META[t];
+      if (m) chips += '<span class="chip ' + m.cls + '">' + m.text + '</span>';
+    }
+    let detail = '';
+    const dvCls = it.dv > 0 ? 'up' : (it.dv < 0 ? 'down' : 'flat');
+    const dvSign = it.dv > 0 ? '+' : (it.dv < 0 ? '-' : '±');
+    const pctSign = it.pct > 0 ? '+' : '';
+    detail += '<span>最新 <b class="v">' + fmtN(it.value) + '</b></span>';
+    detail += '<span class="' + dvCls + '">日变动 ' + dvSign + fmtN(Math.abs(it.dv)) + '（' + pctSign + it.pct.toFixed(2) + '%）</span>';
+    if (it.streak >= 3){
+      const dir = it.dv > 0 ? '上涨' : '下跌';
+      detail += '<span class="' + dvCls + '">连续 ' + it.streak + ' 期' + dir + '，累计 ' + (it.dv > 0 ? '+' : '') + fmtN(it.cum) + '</span>';
+    }
+    html += '<li class="aitem"><div class="row1"><span class="aname">' + it.name + '</span>' + chips + '</div>' +
+            '<div class="row2">' + detail + '</div></li>';
+  }
+  ul.innerHTML = html;
+}
+
+(function init(){
+  document.getElementById('genTime').textContent = ALERT.generatedAt;
+  document.getElementById('genTime2').textContent = ALERT.generatedAt;
+  for (const k of ['ru', 'br', 'lc']) renderList(k);
+})();
+</script>
+<script>
+(function(){
+  var PWD = atob('c3Vpaml1ODg=');
+  var KEY = 'wb_unlock';
+  var TS = 'wb_unlock_ts';
+  var HOURS = 8;
+  var screen = document.getElementById('lockScreen');
+  var pwd = document.getElementById('lockPwd');
+  var err = document.getElementById('lockErr');
+  function remembered(){
+    try {
+      if (sessionStorage.getItem(KEY) === '1') return true;
+      var ts = parseInt(localStorage.getItem(TS) || '0', 10);
+      if (ts && (Date.now() - ts) < HOURS * 3600 * 1000) return true;
+    } catch(e) {}
+    return false;
+  }
+  function remember(){
+    try { sessionStorage.setItem(KEY, '1'); localStorage.setItem(TS, String(Date.now())); } catch(e) {}
+  }
+  function unlock(){
+    if (pwd.value === PWD) {
+      remember();
+      screen.style.display = 'none';
+      document.body.style.overflow = '';
+    } else {
+      err.style.display = 'block';
+      pwd.value = '';
+      pwd.focus();
+    }
+  }
+  if (remembered()) {
+    screen.style.display = 'none';
+  } else {
+    document.getElementById('lockBtn').addEventListener('click', unlock);
+    pwd.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
+    document.body.style.overflow = 'hidden';
+    pwd.focus();
+  }
+})();
+</script>
+
+</body>
+</html>
