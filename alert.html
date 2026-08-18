@@ -137,11 +137,11 @@
 
 <script>
 const ALERT = {
- "generatedAt": "2026-08-18 23:34",
+ "generatedAt": "2026-08-18 23:44",
  "summary": {
-  "ru": "主要异动：NR连一-连二月差（单日大幅下跌 -168.75%）；NR-SICOM（单日大幅下跌 -87.05%）；顺丁-泰混价差（连续5日上涨）；RU5-9月差（连续3日上涨）。",
-  "br": "主要异动：ABS表需（单周大幅上涨 +18.37%）；丁二烯港口库存（单周大幅下跌 -19.01%）；丁二烯CIF中国（单日大幅上涨 +3.57%、连续5日上涨）；SBS表需（单周大幅上涨 +7.20%）；SBS贸易商库存（单周大幅上涨 +5.97%）；SBS总库存（单周大幅上涨 +5.32%）。",
-  "lc": "主要异动：碳酸锂总库存（单周大幅下跌 -7.12%、连续15周下跌）；电池：三元电池库存天数（单周大幅上涨 +28.04%）；周度库存变化（单周大幅下跌 -6.25%、连续7周下跌）；下游正极厂库存（单周大幅下跌 -13.68%、连续4周下跌）；电池：磷酸铁锂电池库存天数（单周大幅上涨 +6.16%）；锂盐厂库存（单周大幅下跌 -7.79%）。"
+  "ru": "结论：NR 连一-连二月差单日大幅走弱 -135、NR-SICOM 大幅回落（-87.05%），显示 20 号胶近月承压、跨市场价差快速收敛；顺丁-泰混价差连续走扩，合成胶强于天胶；RU 5-9 月差连 3 期上行。8-9 月雨季降雨扰动割胶但青岛库存去库放缓，短期天胶高位震荡，警惕近月仓单压力。",
+  "br": "结论：丁二烯供应偏紧（港口库存单周大降 7,500 吨）、CIF 中国单日上行 +50 美金并连续 5 期走强，成本端对 BR 形成强支撑；下游ABS表需周环比 +18.37%、SBS表需周环比 +7.20%，需求端明显回暖。短期 BR 偏强格局延续，关注高价对下游采买的抑制与检修装置重启节奏。",
+  "lc": "结论：产业链延续去库主线（总库存连续 15 周回落、单周 -7,196 吨）、下游正极厂去库 5,943 吨，现货偏紧支撑锂价；仓单连续 12 期累积（37,369 手）反映交割意愿提升；盐湖产量周环比 +2.48% 回升，远期供应增量预期未改。短期强现实与弱预期博弈延续，价格高位波动或加大。"
  },
  "ru": [
   {
@@ -24412,7 +24412,7 @@ function buildSeason(it){
   if (mx === mn){ mx += 1; mn -= 1; }
   const xf = function(di){ return PL + di / maxDi * (W - PL - PR); };
   const yf = function(v){ return PT + (mx - v) / (mx - mn) * (H - PT - PB); };
-  const palette = ['#94a3b8', '#2563eb', '#d92c2c']; // 旧→新
+  const palette = ['#2563eb', '#d92c2c', '#1e2a3a']; // 旧→新：前一年蓝、上一年红、最新年黑
   const colorOf = {};
   years.forEach(function(y, i){ colorOf[String(y)] = palette[Math.min(i, palette.length - 1)]; });
   const latestY = String(years[years.length - 1]);
@@ -24437,10 +24437,10 @@ function buildSeason(it){
     const w = (String(y) === latestY) ? 2.6 : 1.5;
     const op = (String(y) === latestY) ? 1 : 0.8;
     svg += '<polyline points="' + line + '" fill="none" stroke="' + colorOf[String(y)] + '" stroke-width="' + w + '" stroke-linejoin="round" stroke-linecap="round" opacity="' + op + '"/>';
-    // 最新年最后一个点圆点
+    // 最新年最后一个点圆点（黑色）
     if (String(y) === latestY){
       const lp = pts[pts.length - 1];
-      svg += '<circle cx="' + xf(lp[0]).toFixed(1) + '" cy="' + yf(lp[1]).toFixed(1) + '" r="3.2" fill="#d92c2c"/>';
+      svg += '<circle cx="' + xf(lp[0]).toFixed(1) + '" cy="' + yf(lp[1]).toFixed(1) + '" r="3.2" fill="#1e2a3a"/>';
     }
   }
   svg += '</svg>';
