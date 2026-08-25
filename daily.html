@@ -80,14 +80,14 @@
   .quote .q-chg.up{color:var(--up);}
   .quote .q-chg.down{color:var(--down);}
   .quote .q-chg.flat{color:var(--sub);}
-  .panel-body{padding:14px 18px 18px;}
+  .panel-body{padding:13px 12px 16px;}
   .daily-title{font-size:19px; font-weight:700; color:var(--ink); padding:14px 20px; background:var(--card);
     border:1px solid var(--line); border-radius:14px; margin-bottom:14px; display:flex; align-items:center; gap:10px;}
   .daily-title .ico{font-size:18px;}
   .daily-title .date{color:#1d4ed8;}
-  ul.pts{list-style:none;}
-  ul.pts li{position:relative; padding-left:16px; margin-bottom:11px; font-size:13.5px; color:#334155;}
-  ul.pts li::before{content:""; position:absolute; left:0; top:8px; width:6px; height:6px; border-radius:50%; background:#cbd5e1;}
+  ul.pts{list-style:none; margin:0; padding:0;}
+  ul.pts li{position:relative; padding-left:13px; margin-bottom:11px; font-size:13.5px; color:#334155;}
+  ul.pts li::before{content:""; position:absolute; left:0; top:9px; width:5px; height:5px; border-radius:50%; background:#cbd5e1;}
   ul.pts li.lead{font-weight:700; color:#111827;}
   ul.pts li.lead::before{background:#1e2a3a;}
   ul.pts li.empty{color:var(--flat); font-style:italic; padding-left:0;}
@@ -112,8 +112,8 @@
   <div class="sub">同步自钉钉知识库《学习笔记 · 一页通》——按日度总结文字结构化呈现，红涨绿跌 · 重点加粗下划线</div>
   <div class="meta">
     <span class="badge">数据源：钉钉 · 学习笔记 · 一页通</span>
-    <span class="badge">覆盖区间 <b>2026.8.3 – 2026.8.12</b></span>
-    <span class="badge">共 <b>8</b> 个交易日</span>
+    <span class="badge">覆盖区间 <b>2026.8.3 – 2026.8.25</b></span>
+    <span class="badge">共 <b>17</b> 个交易日</span>
   </div>
 </header>
 
@@ -164,6 +164,67 @@
 <script>
 
 const DAILY = {
+ "2026-08-25": {
+  "ru": [
+   {
+    "t": "盘面震荡收跌，RU01 收于 18545（§green§-65§/§）；NR 主力 15560（§green§-95§/§）；RU 1-5 月差 -20（§red§+30§/§）；NR 连一-连二 -205（§green§-10§/§）；RU-NR 价差 2985（§red§+30§/§）；NR-SICOM 104.05（§red§+21.37§/§）。"
+   },
+   {
+    "t": "泰国胶水 77.0（§red§+0.5§/§），杯胶 70.0（§red§+0.5§/§）；杯胶→橡胶加工利润 -776.29（§green§-90.06§/§）；非标基差泰混-RU01 -995（§red§+15§/§）；泰国混合胶 17550（§green§-50§/§）。"
+   },
+   {
+    "t": "周度库存数据更新，§red§本周去库略加速§/§，天胶总库存 107.65（-1.15，-1.06%）、深色胶库存 70.70（-0.46，-0.65%）、浅色胶库存 36.95（-0.69，-1.84%）、其中混合胶库存 46.21（-0.94，-1.99%）、标准胶库存 9.74（-0.18，-1.82%）。"
+   }
+  ],
+  "br": [
+   {
+    "t": "盘面震荡收跌，BR 主力 14495（§green§-225§/§）；连一-连二 115（§green§-5§/§），连二-连三 135（§green§-25§/§）；基差 105（§red§+225§/§）；顺丁价格 14600（§flat§±0§/§）；顺丁出口利润 2560.35（§flat§±0§/§）；BR-丁二烯价差 1620（§green§-225§/§）；BR-NR 价差 -1065（§green§-130§/§）；顺丁-泰混价差 -2950（§red§+50§/§）。"
+   },
+   {
+    "t": "丁二烯价格 12825（§green§-50§/§），CIF 中国 1510（§red§+10§/§），FOB 韩国 1450（§red§+10§/§），FOB 欧洲 1095（§flat§±0§/§）；内外价差 1017.78（§green§-132.34§/§）；中韩价差 60（§flat§±0§/§），中欧价差 415（§red§+10§/§）。"
+   },
+   {
+    "t": "丁二烯装置动态：8 月 §red§茂名/镇海原料问题临停§/§，暂无重启消息；§green§盛虹 8.18 计划内重启；海南 9 月上旬计划重启§/§。"
+   },
+   {
+    "t": "下游负反馈：丁二烯大涨，下游利润快速恶化，§green§顺丁已出现负反馈检修§/§，§b§齐鲁 7wt+台橡 7.2wt§/§ §green§原计划 9 月年检，现略提前至 8 月底§/§；扬子石化 10wt 9 月存 §red§重启§/§ 意向（5.11 停车到现在）。"
+   }
+  ],
+  "lc": [
+   {
+    "t": "盘面震荡收跌，主力 01 收于 150280（§green§-8580§/§）；9-1 月差 -980（§red§+880§/§），1-5 月差 2860（§green§-660§/§）；基差 -550（§green§-300§/§）；总持仓 676532（§green§-13805§/§），总成交 343420（§red§+15804§/§）；仓单 41940（§red§+650§/§）。"
+   },
+   {
+    "t": "SMM 电碳 157000（§green§-3500§/§）；锂辉石 2250（§green§-45§/§）；碳酸锂外采辉石生产成本 156496（§flat§±0§/§）；铁锂正极 58175（§green§-850§/§）；三元正极 179850（§green§-1700§/§）；六氟磷酸锂 115000（§red§+1500§/§）。"
+   },
+   {
+    "t": "§b§9 月电池排产：§/§据大东时代智库，9 月中国锂电全市场（储能+动力+消费）§red§总排产约 332GWh，环比增长 9.2%§/§。9 月环比高增，但其文中表述出现 §green§“旺季峰值确认，未来需求增速放缓”§/§ 的担忧。大东智库维持“前高后平”预期：10 月环比增速大概率回落到 5%-7%，动力无新增量，储能海外高峰也在收窄。盘面转向交易弱预期，今日大跌。"
+   },
+   {
+    "t": "§green§中矿资源：津巴布韦 Bikita 锂精矿运输工作已恢复正常§/§，锂精矿供应可满足公司国内冶炼产能的原料需求。"
+   },
+   {
+    "t": "§b§枧下窝：§/§① 8.23 奉新县生态环境局发布枧下窝第一次环评补充公示（市场理解为需重做环评、复产流程更长）；② 8.24 下午宜丰县生态环境局发布环评公告（征求意见稿），盘面跳水（理解为流程正常推进）；③ 8.24 晚流传证据详实的群众举报信，§red§预期枧下窝 26 年难有增量、复产延后至 27Q1。§/§"
+   }
+  ],
+  "quote": {
+   "ru": {
+    "price": 18545.0,
+    "chg": -65.0,
+    "pct": -0.35
+   },
+   "br": {
+    "price": 14495.0,
+    "chg": -225.0,
+    "pct": -1.53
+   },
+   "lc": {
+    "price": 150280.0,
+    "chg": -8580.0,
+    "pct": -5.4
+   }
+  }
+ },
  "2026-08-24": {
   "br": [
    {
@@ -1096,10 +1157,11 @@ const DAILY = {
 };
 
 const ORDER = {ru:['RU','天然胶'], br:['BR','合成胶'], lc:['LC','碳酸锂']};
-const DATE_KEYS = ["2026-08-24", "2026-08-21", "2026-08-20", "2026-08-19", "2026-08-18", "2026-08-17", "2026-08-14", "2026-08-13", "2026-08-12", "2026-08-11", "2026-08-10", "2026-08-07", "2026-08-06", "2026-08-05", "2026-08-04", "2026-08-03"];
+const DATE_KEYS = ["2026-08-25", "2026-08-24", "2026-08-21", "2026-08-20", "2026-08-19", "2026-08-18", "2026-08-17", "2026-08-14", "2026-08-13", "2026-08-12", "2026-08-11", "2026-08-10", "2026-08-07", "2026-08-06", "2026-08-05", "2026-08-04", "2026-08-03"];
 
 function renderMarkup(s){
   return s
+    .replace(/§b§([^§]+)§\/§/g, '<b>$1</b>')
     .replace(/§key§([^§]+)§\/§/g, '<span class="key">$1</span>')
     .replace(/§red§([^§]+)§\/§/g, '<span class="up">$1</span>')
     .replace(/§green§([^§]+)§\/§/g, '<span class="down">$1</span>')
