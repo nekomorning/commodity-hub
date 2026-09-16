@@ -21,6 +21,7 @@
     border-radius:50%; background:rgba(255,255,255,.06);}
   header h1{font-size:22px; font-weight:700; letter-spacing:1px;}
   header .sub{margin-top:5px; color:#c8d6e5; font-size:13.5px;}
+  header .upd-date{position:absolute; right:28px; top:20px; z-index:1; font-size:12.5px; color:#c8d6e5; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.2); padding:5px 14px; border-radius:20px; white-space:nowrap;}
   /* ===== Tab 导航 ===== */
   .tabs{display:flex; gap:8px; margin-bottom:18px;}
   .tab{display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-size:14px; font-weight:600;
@@ -99,6 +100,7 @@
   <header>
     <h1>RU / BR / LC 汇总看板</h1>
     <div class="sub">天然胶（RU）· 合成胶（BR）· 碳酸锂（LC）三品种数据看板统一入口 —— 点击任意卡片跳转至对应看板页面</div>
+    <span class="upd-date" id="updDate">更新至 2026-09-16</span>
   </header>
 
   <nav class="tabs">
@@ -117,7 +119,7 @@
         <div class="row1">
           <div>
             <div class="pname"><span class="dot ru"></span>天然胶</div>
-            <div class="pcode"><span class="q-pri">RU01 · 18,875.0</span><span class="q-chg up"><span class="arr">▲</span>+155.0 +0.83%</span></div>
+            <div class="pcode"><span class="q-pri">RU01 · 18875</span><span class="q-chg up"><span class="arr">▲</span>+155 +0.83%</span></div>
           </div>
           <a class="enter ru" href="https://nekomorning.github.io/n-rubber-dashboard/" target="_blank">进入看板 ↗</a>
         </div>
@@ -157,7 +159,7 @@
         <div class="row1">
           <div>
             <div class="pname"><span class="dot br"></span>合成胶</div>
-            <div class="pcode"><span class="q-pri">BR主力 · 15,260.0</span><span class="q-chg up"><span class="arr">▲</span>+650.0 +4.45%</span></div>
+            <div class="pcode"><span class="q-pri">BR主力 · 15260</span><span class="q-chg up"><span class="arr">▲</span>+650 +4.45%</span></div>
           </div>
           <a class="enter br" href="https://nekomorning.github.io/s-rubber-dashboard/" target="_blank">进入看板 ↗</a>
         </div>
@@ -194,7 +196,7 @@
         <div class="row1">
           <div>
             <div class="pname"><span class="dot lc"></span>碳酸锂</div>
-            <div class="pcode"><span class="q-pri">LC主力 · 125,820.0</span><span class="q-chg down"><span class="arr">▼</span>-3,300.0 -2.56%</span></div>
+            <div class="pcode"><span class="q-pri">LC主力 · 125820</span><span class="q-chg down"><span class="arr">▼</span>-3300 -2.56%</span></div>
           </div>
           <a class="enter lc" href="https://nekomorning.github.io/lithium-dashboard/core.html" target="_blank">进入看板 ↗</a>
         </div>
