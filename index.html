@@ -12,85 +12,41 @@
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
-    background:var(--bg); color:var(--ink); line-height:1.6; padding:28px 16px 60px;}
-  .wrap{max-width:1200px; margin:0 auto;}
+    background:var(--bg); color:var(--ink); line-height:1.6; padding:24px 20px 32px;}
+  .wrap{max-width:1400px; margin:0 auto;}
   /* ===== 页头 ===== */
   header{background:linear-gradient(135deg,#1e2a3a 0%,#2d3f57 100%); color:#fff; border-radius:14px;
-    padding:18px 28px; margin-bottom:20px; position:relative; overflow:hidden;}
+    padding:16px 26px; margin-bottom:14px; position:relative; overflow:hidden;}
   header::after{content:""; position:absolute; right:-60px; top:-60px; width:240px; height:240px;
     border-radius:50%; background:rgba(255,255,255,.06);}
-  header h1{font-size:22px; font-weight:700; letter-spacing:1px;}
-  header .sub{margin-top:5px; color:#c8d6e5; font-size:13.5px;}
-  header .upd-date{position:absolute; right:28px; top:20px; z-index:1; font-size:12.5px; color:#c8d6e5; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.2); padding:5px 14px; border-radius:20px; white-space:nowrap;}
-  /* ===== Tab 导航 ===== */
-  .tabs{display:flex; gap:8px; margin-bottom:18px;}
-  .tab{display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-size:14px; font-weight:600;
-    padding:9px 22px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:#475569; transition:.15s;}
-  .tab:hover{border-color:#93c5fd; color:#1d4ed8;}
-  .tab.active{background:#1e2a3a; color:#fff; border-color:#1e2a3a;}
-  /* ===== 横向对比表 ===== */
-  /* ===== 横向对比表（已删除） ===== */
-  .sec-title{font-size:16px; font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:8px;}
-  .sec-sub{font-size:12.5px; color:var(--sub); margin-bottom:14px;}
-  table.cmp{width:100%; border-collapse:collapse; font-size:14px;}
-  table.cmp th{background:#f8fafc; color:var(--sub); font-weight:600; text-align:left; padding:10px 12px;
-    border-bottom:2px solid var(--line); white-space:nowrap; font-size:12.5px;}
-  table.cmp td{padding:12px; border-bottom:1px solid var(--line); vertical-align:middle;}
-  table.cmp tr:last-child td{border-bottom:none;}
+  header h1{font-size:23px; font-weight:700; letter-spacing:1px;}
+  header .sub{margin-top:4px; color:#c8d6e5; font-size:13px;}
   .dot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:8px;}
   .dot.ru{background:var(--ru);} .dot.br{background:var(--br);} .dot.lc{background:var(--lc);}
-  .up{color:var(--up); font-weight:600;}
-  .down{color:var(--down); font-weight:600;}
-  .flat{color:var(--sub);}
-  .big-num{font-size:16px; font-weight:700; font-variant-numeric:tabular-nums;}
-  .unit{font-size:11.5px; color:var(--sub); margin-left:4px; font-weight:400;}
-  .tag{display:inline-block; font-size:11px; padding:2px 8px; border-radius:6px; font-weight:600;}
-  .tag-ru{background:var(--ru-bg); color:var(--ru);} .tag-br{background:var(--br-bg); color:var(--br);}
-  .tag-lc{background:var(--lc-bg); color:var(--lc);}
-  a.cmp-go{display:inline-flex; align-items:center; gap:4px; font-size:12.5px; font-weight:600; color:#0f766e;
-    text-decoration:none; border:1px solid #99d5cf; padding:4px 12px; border-radius:8px; background:#f0fdfa;
-    transition:.15s;}
-  a.cmp-go:hover{background:#d9f5f0;}
   /* ===== 品种卡片 ===== */
-  .grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px;}
-  @media (max-width:520px){.grid{grid-template-columns:1fr;}}
+  .grid{display:grid; grid-template-columns:1fr; gap:14px;}
   .panel{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden;
-    display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(16,24,40,.05);}
-  .panel-head{padding:18px 20px 14px; border-bottom:1px solid var(--line);}
+    display:flex; flex-direction:column; box-shadow:0 2px 8px rgba(16,24,40,.06);}
+  .panel-head{padding:14px 22px;}
   .panel-head .row1{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
   .panel-head .row1 > div:first-child{flex:1; min-width:0;}
   .pname{font-size:19px; font-weight:700; display:flex; align-items:center; gap:8px;}
-  .pcode{font-size:14px; color:var(--ink); font-weight:700; margin-top:6px; font-variant-numeric:tabular-nums; line-height:1.3; white-space:nowrap;}
-  .pcode .q-pri{display:inline;}
-  .pcode .q-chg{display:inline; font-size:14px; font-weight:700; font-variant-numeric:tabular-nums; margin-left:8px;}
-  .pcode .q-chg .arr{margin-right:1px;}
-  .pcode .q-chg.up{color:var(--up);}
-  .pcode .q-chg.down{color:var(--down);}
-  .pcode .q-chg.flat{color:var(--sub);}
   a.enter{display:inline-flex; align-items:center; gap:5px; text-decoration:none; font-size:13px; font-weight:700;
-    color:#fff; padding:7px 14px; border-radius:9px; transition:.15s; box-shadow:0 1px 2px rgba(0,0,0,.15); white-space:nowrap; flex:0 0 auto;}
+    color:#fff; padding:9px 18px; border-radius:9px; transition:.15s; box-shadow:0 1px 2px rgba(0,0,0,.15); white-space:nowrap; flex:0 0 auto;}
   a.enter:hover{filter:brightness(1.08); transform:translateY(-1px);}
   a.enter.ru{background:var(--ru);} a.enter.br{background:var(--br);} a.enter.lc{background:var(--lc);}
-  /* pdate 已删除 */
-  /* 核心指标 */
-  .kpi{padding:16px 20px 6px; font-size:12.5px; font-weight:700; color:var(--sub); letter-spacing:1px;}
-  .kpi-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 20px 16px;}
-  .kpi-cell{background:#fafbfd; border:1px solid var(--line); border-radius:10px; padding:10px 12px;}
-  .kpi-cell .lb{font-size:11.5px; color:var(--sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .kpi-cell .val{font-size:15px; font-weight:700; margin-top:2px; font-variant-numeric:tabular-nums; white-space:nowrap;}
-  .kpi-cell .chg{font-size:11.5px; font-weight:600; margin-left:6px;}
   /* 页面导航 */
-  .nav{padding:0 20px 18px; border-top:1px dashed var(--line); margin:0 0 0 0;}
-  .nav .t{font-size:12.5px; font-weight:700; color:var(--sub); letter-spacing:1px; padding:14px 0 8px;}
-  .nav-grid{display:grid; grid-template-columns:1fr 1fr; gap:7px;}
-  .nav-grid a{display:flex; align-items:center; gap:7px; text-decoration:none; font-size:12.8px; color:#334155;
-    background:#fff; border:1px solid var(--line); border-radius:8px; padding:8px 10px; transition:.12s;}
+  .nav{padding:0 22px 14px; border-top:1px dashed var(--line); margin:0 0 0 0;}
+  .nav .t{font-size:12px; font-weight:700; color:var(--sub); letter-spacing:1px; padding:12px 0 10px;}
+  .nav-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:9px;}
+  .nav-grid a{display:flex; align-items:center; gap:8px; text-decoration:none; font-size:13.5px; color:#334155;
+    background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 14px; transition:.12s;}
   .nav-grid a:hover{border-color:#93c5fd; background:#f0f7ff; color:#1d4ed8; transform:translateY(-1px);}
   .nav-grid a .no{font-size:10.5px; font-weight:700; color:#fff; border-radius:5px; padding:1px 5px; flex:0 0 auto;}
   .no-ru{background:var(--ru);} .no-br{background:var(--br);} .no-lc{background:var(--lc);}
-  .nav-grid a .nm{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .nav-grid a .nm{white-space:normal; line-height:1.35;}
   /* 页脚 */
-  footer{margin-top:28px; font-size:12px; color:var(--sub); text-align:center; line-height:1.9;}
+  footer{margin-top:16px; font-size:11.5px; color:var(--sub); text-align:center; line-height:1.8;}
   footer .hl{color:#0f766e; font-weight:600;}
 </style>
 </head>
@@ -99,7 +55,7 @@
 
   <header>
     <h1>RU / BR / LC 汇总看板</h1>
-    <div class="sub">天然胶（RU）· 合成胶（BR）· 碳酸锂（LC）三品种数据看板统一入口 —— 点击任意卡片跳转至对应看板页面</div>
+    <div class="sub">天然胶（RU）· 合成胶（BR）· 碳酸锂（LC）三品种数据看板统一入口 —— 下方按品种列出各看板页面，点击即可直达</div>
   </header>
 
   <!-- 三个品种卡片 -->
@@ -190,7 +146,7 @@
   </div>
 
   <footer>
-    <div>本页为 <span class="hl">RU / BR / LC 三品种数据看板导航中心</span>，汇总数据均来自各看板最新构建产物（更新日期见各卡片徽章）。</div>
+    <div>本页为 <span class="hl">RU / BR / LC 三品种数据看板导航中心</span>，所有数据均来自各看板的最新构建产物，本页仅作入口。</div>
     <div>天然胶看板 <span class="hl">nekomorning.github.io/n-rubber-dashboard</span> · 合成胶看板 <span class="hl">nekomorning.github.io/s-rubber-dashboard</span> · 碳酸锂看板 <span class="hl">nekomorning.github.io/lithium-dashboard</span></div>
   </footer>
 
