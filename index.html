@@ -24,7 +24,8 @@
   .dot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:8px;}
   .dot.ru{background:var(--ru);} .dot.br{background:var(--br);} .dot.lc{background:var(--lc);}
   /* ===== 品种卡片 ===== */
-  .grid{display:grid; grid-template-columns:1fr; gap:14px;}
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; align-items:start;}
+  @media(max-width:1100px){.grid{grid-template-columns:1fr;}}
   .panel{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden;
     display:flex; flex-direction:column; box-shadow:0 2px 8px rgba(16,24,40,.06);}
   .panel-head{padding:14px 22px;}
