@@ -39,7 +39,7 @@
   /* 页面导航 */
   .nav{padding:0 22px 16px; border-top:1px dashed var(--line); margin:0; flex:1; display:flex; flex-direction:column;}
   .nav .t{font-size:12.5px; font-weight:700; color:var(--sub); letter-spacing:1px; padding:14px 0 12px;}
-  .nav-grid{display:grid; grid-template-columns:1fr; gap:11px; flex:1; align-content:space-evenly;}
+  .nav-grid{display:grid; grid-template-columns:1fr; gap:10px; align-content:start;}
   .nav-grid a{display:flex; align-items:center; gap:8px; text-decoration:none; font-size:13.5px; color:#334155;
     background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 14px; transition:.12s;}
   .nav-grid a:hover{border-color:#93c5fd; background:#f0f7ff; color:#1d4ed8; transform:translateY(-1px);}
@@ -83,10 +83,10 @@
 <div class="nav">
         <div class="t">📁 页面导航</div>
         <div class="nav-grid">
-          <a class="tabrow" href="https://nekomorning.github.io/n-rubber-dashboard/" target="_blank"><span class="tt">高频数据</span><span class="tn">日度价格 / 天胶库存 / 下游轮胎 / 天气数据（4 板块）</span></a>
-          <a class="tabrow" href="https://nekomorning.github.io/n-rubber-dashboard/" target="_blank"><span class="tt">平衡表</span><span class="tn">全球年度平衡 / ANRPC 平衡表 / 种面单产（3 板块）</span></a>
-          <a class="tabrow" href="https://nekomorning.github.io/n-rubber-dashboard/" target="_blank"><span class="tt">贸易流</span><span class="tn">天胶+轮胎折合计进出口 / 天然橡胶进出口 / 轮胎进出口 / 重卡（4 板块）</span></a>
-          <a class="tabrow" href="https://nekomorning.github.io/n-rubber-dashboard/" target="_blank"><span class="tt">核心逻辑</span><span class="tn">研究框架 + 全球天胶 / 中国天胶 1–8 月累计表</span></a>
+          <a class="tabrow" href="https://nekomorning.github.io/n-rubber-dashboard/?tab=hf" target="_blank"><span class="tt">高频数据</span><span class="tn">日度价格 / 天胶库存 / 下游轮胎 / 天气数据（4 板块）</span></a>
+          <a class="tabrow" href="https://nekomorning.github.io/n-rubber-dashboard/?tab=bal" target="_blank"><span class="tt">平衡表</span><span class="tn">全球年度平衡 / ANRPC 平衡表 / 种面单产（3 板块）</span></a>
+          <a class="tabrow" href="https://nekomorning.github.io/n-rubber-dashboard/?tab=trade" target="_blank"><span class="tt">贸易流</span><span class="tn">天胶+轮胎折合计进出口 / 天然橡胶进出口 / 轮胎进出口 / 重卡（4 板块）</span></a>
+          <a class="tabrow" href="https://nekomorning.github.io/n-rubber-dashboard/?tab=core" target="_blank"><span class="tt">核心逻辑</span><span class="tn">研究框架 + 全球天胶 / 中国天胶 1–8 月累计表</span></a>
         </div>
       </div>
     </section>
@@ -104,10 +104,10 @@
 <div class="nav">
         <div class="t">📁 页面导航</div>
         <div class="nav-grid">
-          <a class="tabrow" href="https://nekomorning.github.io/s-rubber-dashboard/" target="_blank"><span class="tt">高频数据</span><span class="tn">日度价格 / 开工库存表需（2 板块）</span></a>
-          <a class="tabrow" href="https://nekomorning.github.io/s-rubber-dashboard/" target="_blank"><span class="tt">平衡表</span><span class="tn">丁二烯 / 合成胶 / 轮胎 / 韩国 / 欧盟</span></a>
-          <a class="tabrow" href="https://nekomorning.github.io/s-rubber-dashboard/" target="_blank"><span class="tt">贸易流</span><span class="tn">丁二烯 / 顺丁 / 丁苯 / ABS</span></a>
-          <a class="tabrow" href="https://nekomorning.github.io/s-rubber-dashboard/" target="_blank"><span class="tt">核心逻辑</span><span class="tn">研究框架 + 丁二烯 / 顺丁基本面表</span></a>
+          <a class="tabrow" href="https://nekomorning.github.io/s-rubber-dashboard/?tab=hf" target="_blank"><span class="tt">高频数据</span><span class="tn">日度价格 / 开工库存表需（2 板块）</span></a>
+          <a class="tabrow" href="https://nekomorning.github.io/s-rubber-dashboard/?tab=bal" target="_blank"><span class="tt">平衡表</span><span class="tn">丁二烯 / 合成胶 / 轮胎 / 韩国 / 欧盟</span></a>
+          <a class="tabrow" href="https://nekomorning.github.io/s-rubber-dashboard/?tab=trade" target="_blank"><span class="tt">贸易流</span><span class="tn">丁二烯 / 顺丁 / 丁苯 / ABS</span></a>
+          <a class="tabrow" href="https://nekomorning.github.io/s-rubber-dashboard/?tab=core" target="_blank"><span class="tt">核心逻辑</span><span class="tn">研究框架 + 丁二烯 / 顺丁基本面表</span></a>
         </div>
       </div>
     </section>
@@ -125,10 +125,10 @@
 <div class="nav">
         <div class="t">📁 页面导航</div>
         <div class="nav-grid">
-          <a class="tabrow" href="https://nekomorning.github.io/lithium-dashboard/" target="_blank"><span class="tt">高频数据</span><span class="tn">日度价格 · 产量开工利润 · 产业链库存（3 板块）</span></a>
-          <a class="tabrow" href="https://nekomorning.github.io/lithium-dashboard/" target="_blank"><span class="tt">平衡表</span><span class="tn">锂矿 · 碳酸锂 · 电池（中国锂产业链平衡）</span></a>
-          <a class="tabrow" href="https://nekomorning.github.io/lithium-dashboard/" target="_blank"><span class="tt">汽车</span><span class="tn">全球汽车（6 子页）</span></a>
-          <a class="tabrow" href="https://nekomorning.github.io/lithium-dashboard/" target="_blank"><span class="tt">核心逻辑</span><span class="tn">研究框架 · 基本面数据 · 动力/储能电池体系（4 板块）</span></a>
+          <a class="tabrow" href="https://nekomorning.github.io/lithium-dashboard/?tab=hf" target="_blank"><span class="tt">高频数据</span><span class="tn">日度价格 · 产量开工利润 · 产业链库存（3 板块）</span></a>
+          <a class="tabrow" href="https://nekomorning.github.io/lithium-dashboard/?tab=bal" target="_blank"><span class="tt">平衡表</span><span class="tn">锂矿 · 碳酸锂 · 电池（中国锂产业链平衡）</span></a>
+          <a class="tabrow" href="https://nekomorning.github.io/lithium-dashboard/?tab=auto" target="_blank"><span class="tt">汽车</span><span class="tn">全球汽车（6 子页）</span></a>
+          <a class="tabrow" href="https://nekomorning.github.io/lithium-dashboard/?tab=core" target="_blank"><span class="tt">核心逻辑</span><span class="tn">研究框架 · 基本面数据 · 动力/储能电池体系（4 板块）</span></a>
         </div>
       </div>
     </section>
